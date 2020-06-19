@@ -68,14 +68,16 @@ export default {
       out: require("@/assets/img/out.png"),                      //退出登录图标
 
       navData: [
-        { 
-          name: "消息",
-          path: "/MsgList",
-          imgUrl: require("@/assets/img/msg.png") },
+        // { 
+        //   name: "消息",
+        //   path: "/MsgList",
+        //   imgUrl: require("@/assets/img/msg.png")
+        // },
         {
-          name: "联系人",
+          name: "会话",
           path: "/Friends",
-          imgUrl: require("@/assets/img/friends.png")
+          imgUrl: require("@/assets/img/msg.png")
+          // imgUrl: require("@/assets/img/friends.png")
         },
         {
           name: "账户",
@@ -139,9 +141,17 @@ export default {
 #Box {
   display: flex;
   flex: 1;
-  height: 100%;
   width: 100%;
+  height: 100%;
 }
+
+/* #Box::after {
+  content: '';
+  height: 0;
+  display: block;
+  clear: both;
+  visibility: hidden;
+} */
 
 .nav-box {
   flex: none;
@@ -260,7 +270,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 5px 20px;
   margin-top: 350px;
   height: 30px;
   width: 70px;

@@ -46,7 +46,7 @@ export default {
   methods: {
     changeMsgBtn() {
       const vm = this;
-      vm.$router.push({ name: "myMsg" });
+      vm.$router.push({ name: "EditInfo" });
     }
   }
 };
@@ -66,6 +66,10 @@ export default {
   height: 170px;
   background: #ffffff;
   border-bottom: 1px solid #d3d0d0;
+}
+.box_1 > div{
+  display: flex;
+  margin-right: 10px;
 }
 
 .avater-box img {
@@ -88,6 +92,7 @@ export default {
 }
 
 .app-btn {
+  flex: none;
   padding: 3px 10px;
   border: 1px solid #dad8d8;
   border-radius: 4px;

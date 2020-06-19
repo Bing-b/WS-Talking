@@ -1,50 +1,29 @@
 <template>
     <div class="friends-box">
-
-        <!-- 创建群聊弹窗 -->
-        <div class="black" v-show="showTable">
-            <div class="add-box">
-                <header>创建群聊</header>
-                <input type="text" v-model="groupName"  placeholder="请输入群聊名称..." />
-                <div>
-                    <button @click="createGroup()">确定</button>
-                    <button @click="showTable=!showTable">取消</button>
-                </div>
-           </div>
-       </div>
-
-      <!-- 添加好友弹窗 -->
-      <div class="black" v-show="showTable1">
-          <div class="add-box">
-              <header>添加好友</header>
-              <input type="text" v-model="fname"  placeholder="请输入好友账号..." />
-              <div>
-                  <button @click="addFriend()">确定</button>
-                  <button @click="showTable1=!showTable1">取消</button>
-              </div>
-          </div>
-    </div>
-
     <!-- 联系人列表 -->
     <div class="friends-list">
         <div class="list-nav">
             <ul>
-                <li :class="{active:switchType==1, unread: usersUnRead}" for @click="switchType=1">好友</li>
-                <li :class="{active:switchType==2, unread: groupsUnRead}" for @click="switchType=2">群聊</li>
+                <li :class="{active:switchType==1, unread: usersUnRead}"  @click="switchType=1">好友</li>
+                <li :class="{active:switchType==2, unread: groupsUnRead}" @click="switchType=2">群聊</li>
+                 <!-- <li :class="{active:switchType==1}"  @click="switchType=1">好友</li>
+                <li :class="{active:switchType==2, unread: groupsUnRead}" @click="switchType=2">群聊</li> -->
             </ul>
         </div>
 
         <!-- 好友列表 -->
         <div class="list-box">
             <div class="f-lists">
-                <div class="f-li" @click="triggerFriends(item)" v-if="switchType==1 && item.uid != uid"
+                <div class="f-li" @click="triggerFriends(item)" v-if="switchType==1"
                 v-for="(item,index) in currentUserList" :key="index"
                 >
                    <div class="section">
-                       <img class="user-avater" src="item.avater" alt />
+                       <img v-if="item.avater" class="user-avater" :src="item.avater" alt />
+                       <img v-else class="user-avater" :src="defaultUser" alt />
                        <div class="user-msg">
                            <p>{{item.nickname}}</p>
-                           <span>我就是我是不一样的烟火！</span>
+                           <span>{{item.usersign}}</span>
+                           <!-- <span v-else>我就是我是不一样的烟火！</span> -->
                        </div>
                        <span class="unread-tip" v-if="item.unread">{{item.unread}}</span>
                    </div>
@@ -63,8 +42,8 @@
 
           </div>
           <div class="addbtn-box">
-              <button class="addBtn" @click="showTable1=!showTable1">添加好友</button>
-              <button class="addBtn" @click="showTable=!showTable">添加群聊</button>
+              <button class="addBtn" @click="showAddFriend=!showAddFriend">添加好友</button>
+              <button class="addBtn" @click="showAddGroup=!showAddGroup">添加群聊</button>
           </div>
       </div>
     </div>
@@ -73,7 +52,7 @@
     <div class="chat-box">
         <div class="c-head">
             <div class="c-user">
-                <img :src="userp" alt />
+                <img  :src="userp" alt />
                 <span>{{title}}</span>
             </div>
 
@@ -114,12 +93,36 @@
           <button @click="send()"><img src="../assets/img/send.png" alt /></button>
       </div>
     </div>
+
+      <!-- 创建群聊弹窗 -->
+      <div class="black" v-show="showAddGroup">
+          <div class="add-box">
+              <header>创建群聊</header>
+              <input type="text" v-model="groupName"  placeholder="请输入群聊名称..." />
+              <div>
+                  <button @click="createGroup()">确定</button>
+                  <button @click="showAddGroup=!showAddGroup">取消</button>
+              </div>
+          </div>
+      </div>
+
+    <!-- 添加好友弹窗 -->
+    <div class="black" v-show="showAddFriend">
+        <div class="add-box">
+            <header>添加好友</header>
+            <input type="text" v-model="fname"  placeholder="请输入好友账号..." />
+            <div>
+                <button @click="addFriend()">确定</button>
+                <button @click="showAddFriend=!showAddFriend">取消</button>
+            </div>
+        </div>
+    </div>
+    
   </div>
 </template>
 
 <script>
 import moment from "moment";
-// import chats from "@/components/chats";
 export default {
   name: "Friends",
   // components:{chats},
@@ -128,60 +131,71 @@ export default {
     return {
       switchType: 1,
       title: "选择人聊天",
-      f: true,
-      g: false,
-      userp: require("@/assets/img/user.jpg"),
+      userp: require("@/assets/img/user.jpg"), 
       uid: "",                  // 用户初始化id
       nickname: sessionStorage.getItem("nickname"),
       groupAvater: require("@/assets/img/user.jpg"),
       defaultUser: require("@/assets/img/defaultUser.png"),
       avater: sessionStorage.getItem("avater"),
-      socket: "",
+      ws: "",                     // socket对象
       msg: "",                    // 发送的消息
-      msgList: [],               // 存放消息记录
+      msgList: [],                // 存放消息记录
       users: [],
-      signal: [],               //  存放一对一聊天的用户id
+      signal: [],                 //  存放一对一聊天的用户id
       groupName: "",
-      groups: [],              // 群组
+      groups: [],                // 群组
       groupId: "",
-      showTable: false,
-      showTable1: false,
+      showAddGroup: false,       //  显示添加群组弹窗
+      showAddFriend: false,      //  显示添加好友弹窗
       showDel: false,
       fname: "",
       frends: []
     };
   },
 
+
+  // 页面挂载
   mounted() {
     var _this = this;
-    let user = localStorage.getItem("ws_user");
-    user = (user && JSON.parse(user)) || {};
-    _this.uid = user.uid;
-    _this.nickame = user.nickame;
+    //let user = localStorage.getItem("ws_user");
+    //user = (user && JSON.parse(user)) || {};
+    _this.uid = sessionStorage.getItem('uid');
+    //_this.nickame = user.nickame;
 
-    if (!this.uid) {
-      _this.connWebSocket();
+    if (!_this.uid) {
+     _this.connWebSocket();
+        
     }
+      
+ 
 
+    // 监听回车发送消息
     (document.onkeydown = function(event) {
       var e = event || window.event;
       if (e && e.keyCode == 13) {
         _this.send();
       }
-    }),
+    })
+    
+
+    if(_this.ws.readyState != _this.ws.open){
+      console.log('连接断开，重连中')
+      _this.connWebSocket()
+    }
+
 
       // 监听页面刷新，退出聊天室
-      (window.onbeforeunload = function(e) {
-        _this.socket.send(
-          JSON.stringify({
-            uid: _this.uid,
-            type: 22,
-            nickname: _this.nickname,
-            signal: [],
-            avater: _this.avater
-          })
-        );
-      });
+      // (window.onbeforeunload = function(e) {
+      //   _this.ws.send(
+      //     JSON.stringify({
+      //       uid: _this.uid,
+      //       type: 22,
+      //       nickname: _this.nickname,
+      //       signal: [],
+      //       avater: _this.avater
+      //     })
+      //   );
+      // });
     // _this.getFriends();
   },
 
@@ -240,19 +254,93 @@ export default {
     // 当前联系人列表
     currentUserList() {
       let _this = this;
+     
       _this.users.map(user => {
         //找出联系人对应未读消息
-        // user.unread=this.msgList.filter(item=>{
-        //     return item.signal.length && item.uid === user.uid && item.status===1
-        // }).length
+        user.unread=this.msgList.filter(item=>{
+            return item.signal.length && item.uid === user.uid && item.status===1
+        }).length
         return user;
       });
       //debugger
-      return _this.users;
+      return _this.users.filter(user => {
+        return user.uid !=_this.uid;
+      });
     }
   },
 
   methods: {
+
+    // 连接websocket服务
+    connWebSocket() {
+      var _this = this;
+      if (window.WebSocket) {
+          _this.createWebsocket();
+      } else{
+        _this.$message.warning('该浏览器不支持webSocket');
+      }
+    },
+
+    // 创建websocket连接
+    createWebsocket(){
+        var _this = this;
+        _this.ws = new WebSocket("ws://127.0.0.1:8001");
+        let ws = _this.ws;
+
+        ws.onopen = function(e) {
+          _this.$message.success("连接服务器成功");
+          
+          if (!_this.uid) {
+            //生成用户id
+            //_this.uid = "user" + moment().valueOf();
+            _this.uid = "user" + parseInt(sessionStorage.getItem("username"));
+            _this.avater = sessionStorage.getItem("avater");
+           sessionStorage.setItem('uid',_this.uid);
+            // localStorage.setItem(
+            //   "ws_user",
+            //   JSON.stringify({
+            //     uid: _this.uid,
+            //     nickname: _this.nickname,
+            //     avater: _this.avater
+            //   })
+            // );
+          }
+          _this.sendMsg(1);
+        };
+
+        ws.onclose = function(e) {
+          console.log("服务器已关闭");
+        };
+        ws.onerror = function(e) {
+          console.log("连接错误");
+        };
+
+        //接收消息
+
+        ws.onmessage = function(e) {
+          let msg = JSON.parse(e.data);
+          console.log(msg);
+          _this.msgList.push(msg);
+
+          if (msg.users) {
+            _this.users = msg.users;
+            
+          }
+
+          if (msg.groups) {
+            _this.groups = msg.groups;
+          }
+          _this.$nextTick(() => {
+            var div = document.getElementsByClassName(".chat-body");
+            div.scrollTop = div.scrollHeight;
+          });
+        };
+    },
+
+
+
+
+
     // 发送信息按钮
     send() {
       if (!this.msg) {
@@ -267,17 +355,19 @@ export default {
 
     // 消息发送操作
     sendMsg(type, msg) {
-      this.avater = sessionStorage.getItem("avater");
+      this.avater = this.$store.state.avater;
+      this.usersign=this.$store.state.usersign;
       let msgObj = {
         uid: this.uid,
         type: type,
         nickname: this.nickname,
         avater: this.avater,
+        usersign:this.usersign,
         msg: msg,
         signal: this.signal,
         groupId: this.groupId
       };
-      this.socket.send(JSON.stringify(msgObj));
+      this.ws.send(JSON.stringify(msgObj));
       this.msg = "";
     },
 
@@ -295,7 +385,7 @@ export default {
 
     // 添加群
     addGroup(item) {
-      this.socket.send(
+      this.ws.send(
         JSON.stringify({
           uid: this.uid,
           type: 20,
@@ -316,7 +406,7 @@ export default {
       });
     },
     createGroup() {
-      this.socket.send(
+      this.ws.send(
         JSON.stringify({
           uid: this.uid,
           type: 10,
@@ -325,7 +415,7 @@ export default {
           signal: []
         })
       );
-      this.showTable = false;
+      this.showAddGroup = false;
       this.groupName = "";
     },
 
@@ -344,7 +434,7 @@ export default {
     },
 
     delGroup(item) {
-      this.socket.send(
+      this.ws.send(
         JSON.stringify({
           uid: this.uid,
           type: 22,
@@ -362,7 +452,11 @@ export default {
       this.groupId = "";
       this.signal = [this.uid, item.uid];
       this.title = item.nickname;
+      this.avater=item.avater;
+      this.userp=item.avater
+
     },
+    
     // 添加好友
     addFriend() {
       var _this = this;
@@ -372,150 +466,107 @@ export default {
         fname: fname,
         uname: username
       };
-      _this.$axios
-        .post("/api/users/addFriend", data)
+      _this.$axios.post("/api/users/addFriend", data)
         .then(res => {
           console.log(res.data);
 
           if (res.data == -1) {
             _this.$message.info("输入账号有误");
-          } else {
+          } 
+          if (res.data == -2){
+            _this.$message.info('好友已经存在');
+          }
+          else {
             _this.$message.success("添加成功");
-            _this.showTable1 = false;
+            _this.showAddFriend = false;
+            //_this.getFriends();
+
           }
         })
         .catch(err => {
           console.log(err);
         });
     },
+
+    
     // 获取好友列表
-    getFriends() {
-      var _this = this;
-      var username = parseInt(sessionStorage.getItem("username"));
-      this.$axios
-        .get("/api/users/getFriend", {
-          params: {
-            uname: username
-          }
-        })
-        .then(res => {
-          var result = res.data;
-          if (res.data == -1) {
-            this.$message.info("获取好友列表失败");
-          }
-          if (res.status == 200) {
-            //console.log(result);
-            var frs = result.map(item => {
-              return item.fname;
-            });
-            console.log(frs);
-            for (let i = 0; i < frs.length; i++) {
-              _this.getFMsg(frs[i]);
-            }
-            console.log(_this.frends);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
+    // getFriends() {
+    //   var _this = this;
+    //   var username = parseInt(sessionStorage.getItem("username"));
+    //   this.$axios
+    //     .get("/api/users/getFriend", {
+    //       params: {
+    //         uname: username
+    //       }
+    //     })
+    //     .then(res => {
+    //       var result = res.data;
+    //       if (res.data == -1) {
+    //         this.$message.info("获取好友列表失败");
+    //       }
+    //       if (res.status == 200) {
+    //         //console.log(result);
+    //         var frs = result.map(item => {
+    //           return item.fname;
+    //         });
+    //         //console.log(frs);
+    //         for (let i = 0; i < frs.length; i++) {
+    //           _this.getFMsg(frs[i]);
+              
+    //         }
+    //        // console.log(_this.frends);
+    //       }
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // },
 
     // 获取好友基信息
-    getFMsg(name) {
-      var _this = this;
-      this.$axios
-        .get("/api/users/getUserMsg", {
-          params: {
-            username: name
-          }
-        })
-        .then(res => {
-          var result = res.data;
-          if (res.data == "-1") {
-            this.$message.warning("获取信息失败");
-          }
-          if (res.status == 200) {
-            let nickname = result.nickname;
-            let usersign = result.usersign;
-            let avater = result.avater;
-            var obj = {};
-            obj.nicknam = nickname;
-            obj.usersign = usersign;
-            obj.avater = avater;
-            _this.frends.push(obj);
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    },
+    // getFMsg(name) {
+    //   var _this = this;
+    //   this.$axios
+    //     .get("/api/users/getUserMsg", {
+    //       params: {
+    //         username: name
+    //       }
+    //     })
+    //     .then(res => {
+    //       var result = res.data;
+    //       if (res.data == "-1") {
+    //         this.$message.warning("获取信息失败");
+    //       }
+    //       if (res.status == 200) {
+    //         let nickname = result.nickname;
+    //         let usersign = result.usersign;
+    //         avater = result.avater;
+    //         let  uid='user'+name;
+    //         var obj = {};
+    //         obj.nickname = nickname;
+    //         obj.uid=uid;
+    //         obj.status="";
+    //         console.log(obj);
+    //         _this.users.push(obj);
+    //         obj.usersign = usersign;
+    //         obj.avater = avater;
+           
+    //       }
+    //     })
+    //     .catch(err => {
+    //       console.log(err);
+    //     });
+    // },
 
-    connWebSocket() {
-      var _this = this;
-      if (window.WebSocket) {
-        _this.socket = new WebSocket("ws://127.0.0.1:8001");
-        let socket = _this.socket;
-
-        socket.onopen = function(e) {
-          _this.$message.success("连接服务器成功");
-          if (!_this.uid) {
-            //生成用户id
-            _this.uid = "ws" + moment().valueOf();
-            _this.avater = sessionStorage.getItem("avater");
-            localStorage.setItem(
-              "ws_user",
-              JSON.stringify({
-                uid: _this.uid,
-                nickname: _this.nickname,
-                avater: _this.avater
-              })
-            );
-          }
-          _this.sendMsg(1);
-        };
-
-        socket.onclose = function(e) {
-          console.log("服务器已关闭");
-        };
-        socket.onerror = function(e) {
-          console.log("连接错误");
-        };
-
-        //接收消息
-
-        socket.onmessage = function(e) {
-          let msg = JSON.parse(e.data);
-          console.log(msg);
-          _this.msgList.push(msg);
-
-          if (msg.users) {
-            _this.users = msg.users;
-          }
-
-          if (msg.groups) {
-            _this.groups = msg.groups;
-          }
-          _this.$nextTick(() => {
-            var div = document.getElementsByClassName(".chat-body");
-            div.scrollTop = div.scrollHeight;
-          });
-        };
-      }
-    },
+     
     con() {
       this.connWebSocket();
-      //console.log('---------------')
-      //console.log(this.users)
     }
   }
 };
 </script>
 
 <style  scoped>
-* {
-  padding: 0;
-  margin: 0;
-}
+
 
 button {
   border: none;
@@ -578,7 +629,7 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 500px;
+  height: 500px;
   width: 100%;
   border-radius: 4px;
   background: #f1f7fe;
@@ -618,10 +669,17 @@ button {
 }
 
 .user-msg span {
+  display: inline-block;
+  width: 150px;
+  height: 20px;
   margin-bottom: 7px;
   font-size: 12px;
   font-weight: 400;
   color: #aaa;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
 }
 
 .g-li {

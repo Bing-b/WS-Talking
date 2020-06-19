@@ -95,6 +95,7 @@ export default {
 .change-body {
   display: flex;
   flex-direction: column;
+  margin: 0 20px;
   width: 340px;
   height: 160px;
 }

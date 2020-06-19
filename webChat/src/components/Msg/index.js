@@ -52,12 +52,6 @@ const MESSAGE = {
           callBack && (typeof callBack === 'function') && callBack() 
       // 如果有回调函数就执行，没有就不执行，用&&操作符，
       // 只有&&左边 的代码为true才执行&&右边的代码，避免用面条代码：
-      // if(true){
-      //   ... 
-      //   if(true){
-      //   ...
-      //   }
-      // }
         }, MESSAGE.animateTime)
       }, duration)
     }

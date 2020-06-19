@@ -4,7 +4,7 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import Home from '@/components/Home'
 import Account from '@/components/Account'
-import MsgList from '@/components/MsgList'
+//import MsgList from '@/components/MsgList'
 import Friends from '@/components/Friends'
 
 // 账户路由
@@ -28,14 +28,14 @@ const router = new Router({
       name: 'Home',
       component: Home,
       meta: {requireAuth:true},
-      redirect: '/MsgList',
+      redirect: '/Friends',
       children: [
-        {
-          path: '/MsgList',
-          name: 'MsgList',
-          component: MsgList,
-          meta: {requireAuth:true},
-        },
+        // {
+        //   path: '/MsgList',
+        //   name: 'MsgList',
+        //   component: MsgList,
+        //   meta: {requireAuth:true},
+        // },
         {
           path: '/Friends',
           name: 'Friends',

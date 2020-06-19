@@ -12,7 +12,7 @@ const store = new Vuex.Store({
         usersign: window.sessionStorage.getItem('usersign'),
         introduction: window.sessionStorage.getItem('introduction'),
         ws_user: window.localStorage.getItem('ws_user'),
-
+        socket:window.sessionStorage.getItem('socket'),
         isLogin: ''
     },
 
@@ -23,6 +23,13 @@ const store = new Vuex.Store({
             sessionStorage.setItem('isLogin', JSON.stringify(isLogin));
             state.isLogin = isLogin;
         },
+        
+        getSocket:(state,data) => {
+            state.socket=data;
+            window.sessionStorage.setItem('socket',data)
+        },
+
+
 
         //获取用户账号
         getUser: (state, data) => {

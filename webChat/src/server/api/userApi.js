@@ -165,7 +165,7 @@ router.get('/getUserMsg', (req, res) => {
 //添加好友
 router.post('/addFriend',(req,res)=>{
     var sql_name=$sql.user.select_name;
-
+    var sql_fname=$sql.friends.select_fname;
     var sql_add=$sql.friends.add;
     var params=req.body;
     var username=params.fname;
@@ -175,20 +175,31 @@ router.post('/addFriend',(req,res)=>{
             console.log(err);
         }
         if(result[0]===undefined){
-            res.send('-1');
+            res.send('-1');     // 不存在用户
         }
         else{
-            conn.query(sql_add,[params.fname,params.uname],function(err,result){
+            conn.query(sql_fname,params.fname,function(err,result){
                 if(err){
-                    console.log(err);
+                    console.log(err)
                 }
-                if(result){
-                    jsonWrite(res,result);
-                }else{
-                    console.log(err);
+                if(result[0] === undefined){
+                    conn.query(sql_add,[params.fname,params.uname],function(err,result){
+                        if(err){
+                            console.log(err);
+                        }
+                        if(result){
+                            jsonWrite(res,result);
+                        }else{
+                            console.log(err);
+                        }
+                    })
+                } else{
+                    res.send('-2');
                 }
             })
-        
+
+
+           
         }
     })
 });

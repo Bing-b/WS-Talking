@@ -1,10 +1,10 @@
 
 var ws = require('nodejs-websocket')
-var moment = require('moment');
+var moment = require('moment');            // 引入事件模块
 
-// websocket
 
 let users = [];
+
 //一对一聊天存放对应连接
 let conns = {};
 
@@ -15,9 +15,7 @@ let groups = [];
 function boardcast(obj) {
     // signal参数用于判断群聊和单聊
     if (obj.signal && obj.signal.length) {
-
         obj.signal.forEach(item => {
-
             conns[item].sendText(JSON.stringify(obj));
         })
         return;
@@ -48,6 +46,8 @@ function getDate() {
 }
 
 
+
+
 // 创建websocket服务
 var wsServer = ws.createServer(function (connWs) {
 
@@ -65,10 +65,16 @@ var wsServer = ws.createServer(function (connWs) {
                     return item.uid === obj.uid;
                 })
                 if (!isuser) {
+
+                 users=[...new Set(users)];
+
+
                     users.push({
                         nickname: obj.nickname,
                         uid: obj.uid,
-                        status: 1
+                        status: 1,
+                        avater:obj.avater,
+                        usersign:obj.usersign
                     });
                 } else {
                     users.map((item, index) => {

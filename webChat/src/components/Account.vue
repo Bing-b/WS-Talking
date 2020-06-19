@@ -14,7 +14,7 @@
               </li>
           </ul>    
        </div>
-
+       
        <!-- 侧边导航切换盒子 -->
        <div class="r-box">
           <router-view></router-view>
@@ -53,6 +53,7 @@ export default {
     };
   },
 
+
 };
 </script>
 
@@ -69,10 +70,6 @@ export default {
   height: 250px;
   background: #fff;
   border-radius: 4px;
-}
-
-ul{
-  padding: 0;
 }
 
 header {

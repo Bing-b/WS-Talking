@@ -39,27 +39,37 @@ export default {
 </script>
 
 
-<style scoped>
+<style>
+div, p, ul, li, ul li, h1, h2, h3, h4, span, body, * {
+    margin: 0;
+    padding: 0;
+}
+
 *{
-  padding: 0;
-  margin: 0;
-  border: 0;
   font-family:-apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Microsoft YaHei,
   Source Han Sans SC,Noto Sans CJK SC,WenQuanYi Micro Hei,sans-serif;
+}
+
+
+/* 清除浮动元素影响 */
+#app:after{
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
 }
 
 a{
   text-decoration: none;
 }
+
 ul{
   padding: 0;
 }
+
 ul li{
   list-style: none;
-}
-
-#app{
-  height: 100%;
 }
 
 </style>
