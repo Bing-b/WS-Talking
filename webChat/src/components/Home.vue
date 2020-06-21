@@ -1,6 +1,5 @@
 <template>
   <div id="Box">
-
       <!-- 侧边导航 -->
       <div class="nav-box">
           <div class="logo">
@@ -30,13 +29,11 @@
     </div>
 
     <div id="rightBox">
-
         <!-- 用户头像状态 -->
         <div class="head-box">
             <div class="user-msg">
                 <img v-if="!this.$store.state.avater" :src="defaultUser" alt="用户头像" />
                 <img v-else :src="avater" alt="用户头像" />
-
                 <div class="user-msgs">
                     <span v-if="!this.$store.state.nickname">{{this.$store.state.username}}</span>
                     <span v-else>{{this.$store.state.nickname}}</span>
@@ -48,7 +45,6 @@
 
       <!-- body放置其他组件区域 -->
       <router-view />
-
     </div>
   </div>
   
@@ -137,21 +133,12 @@ export default {
 
 <style scoped>
 
-
 #Box {
   display: flex;
   flex: 1;
   width: 100%;
   height: 100%;
 }
-
-/* #Box::after {
-  content: '';
-  height: 0;
-  display: block;
-  clear: both;
-  visibility: hidden;
-} */
 
 .nav-box {
   flex: none;

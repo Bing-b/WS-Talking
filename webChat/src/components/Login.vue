@@ -1,6 +1,5 @@
 <template>
     <div class="body">
-
         <div class="logo"> 
             <img src="../assets/img/LOGO.jpg" alt="logo">
             <div><span>ws</span>Talking</div>
@@ -17,8 +16,8 @@
             <!-- 登录模块 -->
             <div class="login-box" v-show="showLogin">
                 <form>
-                    <input class="input" type="text" v-model="username" placeholder="请输入登录手机号">
-                    <input class="input" type="password"  v-model="password" placeholder="请输入密码">
+                    <input class="input" type="text" v-model="username" placeholder="请输入登录手机号" autocomplete>
+                    <input class="input" type="password"  v-model="password" placeholder="请输入密码" autocomplete>
                     <input class="input btn" type="button" value="登录" @click="login()">
                     <div class="log-tag">
                         <span class="reg" >还没账号？<a class="blue-txt" @click="switchLogin();createCode()">快速注册</a></span>
@@ -31,8 +30,8 @@
             <!-- 注册模块 -->
             <div class="register-box" v-show="showRegister">
                 <form>
-                    <input class="input" type="text" v-model="username" placeholder="请输入注册手机号">
-                    <input class="input" type="password" v-model="password" placeholder="请输入密码">
+                    <input class="input" type="text" v-model="username" placeholder="请输入注册手机号" autocomplete>
+                    <input class="input" type="password" v-model="password" placeholder="请输入密码" autocomplete>
                     <div class="code-box">
                         <input class="input inputCode" type="text" v-model="inputCode" placeholder="请输入验证码" style="width: 130px;">
                         <!-- 验证码组件 -->
@@ -275,11 +274,18 @@ export default {
     display: flex;
     justify-content: flex-end;
     width: 100%;
-    height: 100%;
-    overflow: hidden;
+    height: 100vh;
     background: url(../assets/img/bg-2.png)repeat;
     background-color: #f1f1f1; 
 }
+
+/* .body::after {
+    content: '';
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+} */
 
 .logo {
     position: absolute;

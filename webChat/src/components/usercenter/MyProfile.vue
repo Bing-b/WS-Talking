@@ -91,6 +91,13 @@ export default {
   border-left: 2px solid #ececec;
 }
 
+.u-msg span{
+  display: inline-block;
+  min-width: 200px;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+
 .app-btn {
   flex: none;
   padding: 3px 10px;

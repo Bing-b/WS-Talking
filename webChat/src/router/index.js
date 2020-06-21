@@ -7,11 +7,21 @@ import Account from '@/components/Account'
 //import MsgList from '@/components/MsgList'
 import Friends from '@/components/Friends'
 
+// const Home = ()=>import('@/components/Home');
+// const Account = ()=>import('@/components/Account');
+// const Friends = ()=>import('@/components/Friends');
+
+
 // 账户路由
-import MyProfile from '@/components/usercenter/MyProfile'
-import EditInfo from '@/components/usercenter/EditInfo'
-import Avater from '@/components/usercenter/Avater'
-import ChangePwd from '@/components/usercenter/ChangePwd'
+// import MyProfile from '@/components/usercenter/MyProfile'
+// import EditInfo from '@/components/usercenter/EditInfo'
+// import Avater from '@/components/usercenter/Avater'
+// import ChangePwd from '@/components/usercenter/ChangePwd'
+
+const MyProfile = ()=>import('@/components/usercenter/MyProfile');
+const EditInfo = ()=>import('@/components/usercenter/EditInfo');
+const Avater = ()=>import('@/components/usercenter/Avater');
+const ChangePwd = ()=>import('@/components/usercenter/ChangePwd')
 
 Vue.use(Router)
 

@@ -24,11 +24,12 @@ export default {
   },
 
   methods:{
-    saveState(){
+    saveState() {
       sessionStorage.setItem('state',JSON.stringify(this.$store.state));
     },
+
     //重载数据防止页面刷新导致的vuex数据丢失
-    reload(){
+    reload() {
       this.isRouterActive=false;
       this.$nextTick(function(){
         this.isRouterActive=true;
@@ -40,7 +41,7 @@ export default {
 
 
 <style>
-div, p, ul, li, ul li, h1, h2, h3, h4, span, body, * {
+div, p, ul, li, ul li, h1, h2, h3, h4, span, * {
     margin: 0;
     padding: 0;
 }
@@ -50,14 +51,8 @@ div, p, ul, li, ul li, h1, h2, h3, h4, span, body, * {
   Source Han Sans SC,Noto Sans CJK SC,WenQuanYi Micro Hei,sans-serif;
 }
 
-
-/* 清除浮动元素影响 */
-#app:after{
-  content: "";
-  display: block;
-  height: 0;
-  clear: both;
-  visibility: hidden;
+#app{
+  display: flex;
 }
 
 a{
