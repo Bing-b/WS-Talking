@@ -1,4 +1,4 @@
-//数据库操作
+// 数据库操作
 var sqlMap = {
     user: {
         add: 'insert into user(username,password) values(?,?)',

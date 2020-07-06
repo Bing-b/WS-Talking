@@ -57,7 +57,6 @@ export default {
 };
 </script>
 
-
 <style scoped>
 #account {
   display: flex;

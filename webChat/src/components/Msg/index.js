@@ -42,10 +42,10 @@ const MESSAGE = {
       vm.show = true
       let t1 = setTimeout(() => {
         clearTimeout(t1)
-        vm.show = false  //隐藏提示组件，此时会有300ms的动画效果，等动画效果过了再从body中移除dom
+        vm.show = false  // 隐藏提示组件，此时会有300ms的动画效果，等动画效果过了再从body中移除dom
         let t2 = setTimeout(() => {
           clearTimeout(t2)
-          document.body.removeChild(el) //从body中移除dom
+          document.body.removeChild(el) // 从body中移除dom
           newMessage.$destroy()
           vm = null // 设置为null，好让js垃圾回收算法回收，释放内存
 
@@ -56,7 +56,7 @@ const MESSAGE = {
       }, duration)
     }
 
-// 挂载到vue原型上，暴露四个方法
+    // 挂载到vue原型上，暴露四个方法
     Vue.prototype.$message = {
       info(text, callBack) {
         if (!text) return

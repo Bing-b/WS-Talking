@@ -1,11 +1,7 @@
 <template>
   <div class="contBox">
     <div class="msgList"></div>
-
-    <!-- 待功能更新 -->
-
-
-  
+    <!-- 功能开发中 -->
   </div>
 </template>
 
@@ -15,17 +11,6 @@ export default {
 }
 </script>
 <style  scoped>
-* {
-  padding: 0;
-  margin: 0;
-}
-
-input,
-button {
-  outline: none;
-  border: 0;
-}
-
 .contBox {
   display: flex;
   flex: 1;

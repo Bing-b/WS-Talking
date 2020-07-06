@@ -6,26 +6,25 @@
               <img src="../assets/img/LOGO.jpg" alt="logo" />
               <span class="bule-txt">ws</span>Talking
           </div>
-
-      <div class="nav">
-          <ul>
-              <li v-for="(item,i) in navData"
-               :class="{nav_li:active === i}"
-               :key="i"
-               @click="$router.push({path:item.path}),active = i">
-              <img :src="item.imgUrl" />
-              {{item.name}}
-             </li>
-          </ul>
-      </div>
-
-      <!-- 退出登录 -->
-      <div class="footer">
-          <div class="login-out" @click="loginOut()">
-              <img :src="out" />
-              <span>退出</span>
+          <div class="nav">
+              <ul>
+                  <li v-for="(item,i) in navData"
+                  :class="{nav_li:active === i}"
+                  :key="i"
+                  @click="$router.push({path:item.path}),active = i">
+                  <img :src="item.imgUrl" />
+                  {{item.name}}
+                </li>
+              </ul>
           </div>
-      </div>
+
+          <!-- 退出登录 -->
+          <div class="footer">
+              <div class="login-out" @click="loginOut()">
+                  <img :src="out" />
+                  <span>退出</span>
+              </div>
+          </div>
     </div>
 
     <div id="rightBox">
@@ -58,9 +57,8 @@ export default {
   data() {
     return {
       active: 0,
-      userName: "",
       defaultUser: require("@/assets/img/defaultUser.png"),      //默认用户头像
-      avater: sessionStorage.getItem("avater"),
+      avater: sessionStorage.getItem("avater"),                  //用户头像
       out: require("@/assets/img/out.png"),                      //退出登录图标
 
       navData: [
@@ -195,10 +193,6 @@ export default {
   justify-content: center;
   margin-top: 50px;
   height: 200px;
-}
-
-.nav ul {
-  padding: 0;
 }
 
 .nav li {

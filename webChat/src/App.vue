@@ -39,7 +39,6 @@ export default {
 }
 </script>
 
-
 <style>
 div, p, ul, li, ul li, h1, h2, h3, h4, span, * {
     margin: 0;
@@ -65,6 +64,10 @@ ul{
 
 ul li{
   list-style: none;
+}
+
+button {
+  border: none;
 }
 
 </style>

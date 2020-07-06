@@ -166,9 +166,6 @@ export default {
      _this.connWebSocket();
         
     }
-      
- 
-
     // 监听回车发送消息
     (document.onkeydown = function(event) {
       var e = event || window.event;
@@ -566,12 +563,6 @@ export default {
 </script>
 
 <style  scoped>
-
-
-button {
-  border: none;
-}
-
 .friends-box {
   display: flex;
   flex: 1;
@@ -579,6 +570,7 @@ button {
   margin: 0 15px;
 }
 
+/* 清除浮动影响 */
 .friends-box::after {
   content: "";
   display: block;
@@ -714,7 +706,7 @@ button {
   color: rgb(116, 113, 113);
 }
 
-/* 聊天窗口样式？ */
+/* 聊天窗口样式 */
 .chat-box {
   display: flex;
   flex-direction: column;

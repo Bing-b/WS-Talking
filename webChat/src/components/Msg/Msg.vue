@@ -1,8 +1,8 @@
 <template>
   <transition name="fade">
     <div class="message" :class="type" v-show="show">
-      <span :class="type"></span>
-      <span class="text">{{text}}</span>
+        <span id="icon" :class="type"></span>
+        <span class="text">{{text}}</span>
     </div>
   </transition>
 </template>
@@ -15,7 +15,7 @@ export default {
       type: String,
       default: "info",
       validator: val => ["info", "success", "warning", "error"].includes(val)
-      //['info', 'success', 'warning', 'error'] 表示type只接收这四个字符串作为参数传入message组件
+      // ['info', 'success', 'warning', 'error'] 表示type只接收这四个字符串作为参数传入message组件
     },
     text: {
       type: String,
@@ -60,38 +60,41 @@ export default {
   color: #f0be57;
   background: #fdf6ec;
 }
+
 .info {
   color: #909399;
   background: #edf2fc;
 }
+
 .success {
   color: #8ac46e;
   background: #f0f9eb;
 }
+
 .error {
   color: #f56c6c;
   background: #fef0f0;
 }
 
 /* 警示图标 */
-span[class="info"] {
+#icon {
   width: 20px;
   height: 20px;
+}
+
+span[class="info"] {
   background: url(./../../../static/icon/warning.png);
 }
+
 span[class="success"] {
-  width: 20px;
-  height: 20px;
   background: url(./../../../static/icon/success.png);
 }
+
 span[class="warning"] {
-  width: 20px;
-  height: 20px;
   background: url(./../../../static/icon/warning.png);
 }
+
 span[class="error"] {
-  width: 20px;
-  height: 20px;
   background: url(./../../../static/icon/error.png);
 }
 </style>
