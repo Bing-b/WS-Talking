@@ -35,7 +35,8 @@ router.post('/addUser', (req, res) => {
                     console.log(err)
                 }
                 if (result) {
-                    jsonWrite(res, result)
+                    res.send('ok')
+                   // jsonWrite(res, result)
                 }
             })
         } else {
@@ -65,7 +66,7 @@ router.post('/selectUser', (req, res) => {
                     res.send('0');    //userName正确后，password错误，data返回 0
                 } else {
                     console.log(result[0]);
-                    res.send(result[0]);
+                    res.send('ok');
                     // jsonWrite(res, result);
                 }
             })
@@ -156,7 +157,7 @@ router.get('/getUserMsg', (req, res) => {
             res.send('-1')    //查询不出username，data返回-1
         } else {
             res.send(result[0]);
-            // jsonWrite(res, result);
+            //jsonWrite(res, result);
         }
     })
 

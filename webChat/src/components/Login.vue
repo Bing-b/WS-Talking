@@ -27,7 +27,6 @@
                           <span>登录</span>
                           </button>
                       </div>
-                      <!-- <div class="footer"><a href="#">忘记密码？</a></div> -->
                    </form>
                </div>
            </div>
@@ -112,7 +111,7 @@ export default {
         ...mapMutations(['getIntroduction']),
         ...mapMutations(['getAvater']),
 
-           
+        // 切换到登录   
         showLogin() {
             $(".container").stop().addClass("active");
             this.showLog=false;
@@ -120,6 +119,7 @@ export default {
             this.createCode();
         },
 
+        // 切换到注册
         showRegister() {
             $(".container").stop().removeClass("active");
             this.showLog=true;
@@ -136,32 +136,24 @@ export default {
             var codeVal=this.inputCode.toLowerCase(),
                 num=this.$refs.vcode.showCode.join("");
 
-            if (this.username == "") {
-                this.$message.info('手机号不能为空');
+            if (this.username == "" || this.params == "" || this.codeVal == "") {
+                this.$message.error({message:"请填写完整的注册信息"});
                 return false;
             }
             if (!(/^1(3|4|5|6|7|8|9)\d{9}$/.test(this.username))) {
-                this.$message.info('手机号格式不正确');
-                return false;
-            }
-            if (this.password == "") {
-                this.$message.info('密码不能为空');
+                this.$message.error({message:"手机号格式错误"});
                 return false;
             }
             if (this.password.length<6 || this.password.length>8) {
-                this.$message.info('密码在6-10位');
+                this.$message.error({message:"密码在6-12位"});
                 return false;
             }
             if (!(/^(?=.*[a-zA-Z])(?=.*[1-9])(?=.*[\W]).{6,}$/).test(this.password)) {
-                this.$message.info('密码必须包含字母、数字、特殊符号');
-                return false;
-            }
-            if (codeVal == "") {
-                this.$message.info('请输入验证码');
+                this.$message.error({message:"密码必须包含字母、数字、特殊符号"});
                 return false;
             }
             if (codeVal != num) {
-                this.$message.info('验证码错误！请重新输入！');
+                this.$message.error({message:"验证码错误！请重新输入！"});
                 this.inputCode = "";
                 this.$refs.vcode.drawCode();
                 return false;
@@ -171,20 +163,19 @@ export default {
 
         // 注册按钮
         regBtn() {
-            this.checkReg();
             if (this.checkReg()) {
                 this.reg();
             } else {
-                console.log('err');
+                console.log('error');
             }
         },
+
         // 用户注册
         reg(){
             let data = {
                 username: this.username,
-                password: this.password
+                password: this.$md5(this.password)
             };
-
             this.$axios.post("/api/users/addUser",data)
             .then(res=>{
                 console.log(res.data);
@@ -195,18 +186,16 @@ export default {
                     this.inputCode = "";
                     this.username = "";
                     this.password = "";
-                } else if (res.status==200) {
+                } 
+                if (res.data == 'ok') {
                     this.$message.success('注册成功');
                     this.inputCode = "";
                     this.username = "";
                     this.password = "";
-                    
-                    var _this =this
-                    /*注册成功之后再跳回登录页*/
+                    var _this =this;
                     setTimeout(
                         function() {
                         _this.showRegister();
-                       // this.$router.push("/");
                         }.bind(this),
                         1000
                     );
@@ -221,42 +210,39 @@ export default {
         login() {
             let data = {
                 username: this.username,
-                password: this.password
+                password: this.$md5(this.password)
             };
+            if(this.username == "" || this.params == "") {
+              this.$message.error({message:'请填写完整的信息'})
+            } else {
+                this.$axios.post("/api/users/selectUser",data)
+                .then( res => {
+                  console.log(res.data);
 
-            this.$axios.post("/api/users/selectUser",data)
-            .then( res => {
-                console.log(res.data);
-
-                if (res.data == -1) {
-                  this.$message.error({message:'用户名或密码错误'})
-               // this.$message.info('用户名或密码错误');
-                } else if (res.data == 0) {
-                this.$message.info('用户名或密码错误');
-                } else {
-                this.$message.success('登录成功');
-                //存入登录状态标志
-                this.$store.commit('login',true);
-                //获取用户信息 
-                this.getUserMsg();
-                this.$router.push("/home");
-                setTimeout(
-                    function() {
-                    this.$router.push("/home");
-                    }.bind(this),
-                    1000);
-                }
-            })
-            .catch( err => {
-                console.log(err);
-            })
+                  if (res.data == -1) {
+                  this.$message.error({message:'请确认用户名是否输入正确'});
+                  } 
+                  if (res.data == 0) {
+                  this.$message.error({message:'请确认密码是否输入正确'});
+                  } 
+                  if(res.data == 'ok'){
+                  this.$message.success({message:'登录成功'});
+                   // 存入登录状态标志
+                  this.$store.commit('login',true); 
+                  this.getUserMsg();
+                  setTimeout(function() { 
+                      this.$router.push("/home")}.bind(this),2000);
+                  } 
+              })
+              .catch( err => {
+                  console.log(err);
+              })
+              }  
         },
-
 
         // 获取用户基本信息
         getUserMsg() {
             var _this = this;
-            
             this.$axios.get("/api/users/getUserMsg",{
                 params:{
                     username: this.username,
@@ -264,7 +250,7 @@ export default {
             })
             .then( res => {
                 var result = res.data;
-
+               // console.log(result)
                 if (res.data == '-1') {
                     this.$message.warning('获取信息失败');
                 }

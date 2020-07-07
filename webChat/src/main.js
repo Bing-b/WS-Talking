@@ -4,14 +4,14 @@ import router from './router'
 import axios from 'axios'
 import store from './store/index'
 import ElementUI from 'element-ui'
+import md5 from 'js-md5'
 import 'element-ui/lib/theme-chalk/index.css'
-//引入消息弹出框组件
-//import Msg from './components/Msg/index'
+
 
 Vue.config.productionTip = false
 //挂载到原型，方便调用$this.axios
 Vue.prototype.$axios = axios;
-//Vue.use(Msg);
+Vue.prototype.$md5 = md5;
 Vue.use(ElementUI)
 Vue.config.productionTip = false;
 
