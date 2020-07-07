@@ -93,9 +93,10 @@ export default {
 }
 
 .canvasBox{
+    cursor: pointer;
     width: 100px;
     height: 40px;
-    background-color: #f1f1f1;
+    background-color: #ffffff;
     border-radius:5px;
 }
 </style>

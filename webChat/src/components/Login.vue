@@ -31,12 +31,12 @@
                    </form>
                </div>
            </div>
-           
+
            <div class="card alt">
-               <div class="toggle" @click="toggles()"></div>
+               <div class="toggle" @click="showLogin()"></div>
                <div  v-show="showReg">
                    <h1 class="title">
-                       注册<div class="close" @click="closes()"></div>
+                       注册<div class="close" @click="showRegister()"></div>
                    </h1>
                     <!-- 注册表单 -->
                    <form>
@@ -95,8 +95,6 @@ export default {
     mounted(){
             var _this=this;
             this.$refs.vcode.drawCode();
-            // 获取本地用户信息，挂载用户头像
-            this.localUserMsg();
             // 监听回车 确认登录
             document.onkeydown = function (event) {
             var e = event || window.event;
@@ -115,27 +113,18 @@ export default {
         ...mapMutations(['getAvater']),
 
            
-    toggles() {
-    
-      
-        $(".container").stop().addClass("active");
-        this.showLog=false;
-        this.showReg=true;
-        this.createCode();
-      
-    },
+        showLogin() {
+            $(".container").stop().addClass("active");
+            this.showLog=false;
+            this.showReg=true;
+            this.createCode();
+        },
 
-    closes() {
-        $(".container").stop().removeClass("active");
-        this.showLog=true
-        this.showReg=false
-      
-    },
-        // 登录注册模块切换
-        // switchLogin(){
-        //     this.showLogin=!this.showLogin;
-        //     this.showRegister=!this.showRegister;
-        // },
+        showRegister() {
+            $(".container").stop().removeClass("active");
+            this.showLog=true;
+            this.showReg=false;
+        },
 
         // 创建验证码
         createCode() {
@@ -216,7 +205,7 @@ export default {
                     /*注册成功之后再跳回登录页*/
                     setTimeout(
                         function() {
-                        _this.closes();
+                        _this.showRegister();
                        // this.$router.push("/");
                         }.bind(this),
                         1000
@@ -240,7 +229,8 @@ export default {
                 console.log(res.data);
 
                 if (res.data == -1) {
-                this.$message.info('用户名或密码错误');
+                  this.$message.error({message:'用户名或密码错误'})
+               // this.$message.info('用户名或密码错误');
                 } else if (res.data == 0) {
                 this.$message.info('用户名或密码错误');
                 } else {
@@ -300,15 +290,6 @@ export default {
             })
         },
 
-        // 获取本地用户头像
-        localUserMsg() {
-            for (var i = localStorage.length-1;i >= 0; i--){
-                if (localStorage.key(i) == "avater") {
-                    this.avater=localStorage.getItem(localStorage.key(i));
-                }
-            }
-        }
-
         }
     
     }
@@ -317,14 +298,18 @@ export default {
 
 <style scoped>
 @import "../assets/css/font-awesome/css/font-awesome.min.css";
+
 .body {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
     width: 100%;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background: url(../assets/img/bg-2.png)repeat;
-    background-color: #f1f1f1; 
+    background-color: #f1f1f1;
+    position: relative;
+    overflow-y: auto;
+    background-attachment: fixed;
 }
 
 .header {
@@ -350,25 +335,30 @@ export default {
 }
 
 .code-box {
+  width: 100px;
+  height: 40px;
+  cursor: pointer;
   right: 0;
   top: 10px;
+  z-index: 1;
   position: absolute;
 
 }
 
 .footer {
-  position: absolute;
-  bottom: 10px;
-  color: rgba(0, 0, 0, 0.6);
+  margin-top:auto;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.7);
 }
 
 /* 表单主体 */
 .container {
   position: relative;
   max-width: 440px;
-  width: 600px;
+  width: 440px;
   margin-top: 50px;
 }
+
 
 .container.active .card:first-child {
   background: #f2f2f2;
@@ -393,11 +383,11 @@ export default {
 
 .container.active .card.alt .toggle {
   position: absolute;
-  top: 40px;
-  right: -70px;
+  top:200px;
+  right: 170px;
   box-shadow: none;
-  -webkit-transform: scale(10);
-  transform: scale(14);
+  -webkit-transform: scale(8);
+  transform: scale(8);
   -webkit-transition: -webkit-transform .3s ease;
   transition: -webkit-transform .3s ease;
   transition: transform .3s ease;
@@ -449,12 +439,12 @@ export default {
   font-weight: 600;
 }
 
-.card .input-container {
+.input-container {
   position: relative;
   margin: 0 60px 35px;
 }
 
-.card .input-container input {
+.input-container input {
   outline: none;
   z-index: 1;
   position: relative;
@@ -467,24 +457,24 @@ export default {
   font-weight: 400;
 }
 
-.card .input-container input:focus ~ label {
+.input-container input:focus ~ label {
   color: #9d9d9d;
   -webkit-transform: translate(-12%, -50%) scale(0.75);
           transform: translate(-12%, -50%) scale(0.75);
 }
 
-.card .input-container input:focus ~ .bar:before, 
-.card .input-container input:focus ~ .bar:after {
+.input-container input:focus ~ .bar:before, 
+.input-container input:focus ~ .bar:after {
   width: 50%;
 }
 
-.card .input-container input:valid ~ label {
+.input-container input:valid ~ label {
   color: #9d9d9d;
   -webkit-transform: translate(-12%, -50%) scale(0.75);
           transform: translate(-12%, -50%) scale(0.75);
 }
 
-.card .input-container label {
+.input-container label {
   position: absolute;
   top: 0;
   left: 0;
@@ -496,7 +486,7 @@ export default {
   transition: 0.2s ease;
 }
 
-.card .input-container .bar {
+.input-container .bar {
   position: absolute;
   left: 0;
   bottom: 0;
@@ -505,8 +495,8 @@ export default {
   height: 1px;
 }
 
-.card .input-container .bar:before,
-.card .input-container .bar:after {
+.input-container .bar:before,
+.input-container .bar:after {
   content: '';
   position: absolute;
   background: #2f80ec;
@@ -516,20 +506,20 @@ export default {
   transition: .2s ease;
 }
 
-.card .input-container .bar:before {
+.input-container .bar:before {
   left: 50%;
 }
 
-.card .input-container .bar:after {
+.input-container .bar:after {
   right: 50%;
 }
 
-.card .button-container {
+.button-container {
   margin: 0 60px;
   text-align: center;
 }
 
-.card .button-container button {
+.button-container button {
   outline: 0;
   cursor: pointer;
   position: relative;
@@ -547,7 +537,7 @@ export default {
   transition: .3s ease;
 }
 
-.card .button-container button span {
+.button-container button span {
   position: relative;
   z-index: 1;
   color: #ddd;
@@ -555,7 +545,7 @@ export default {
   transition: .3s ease;
 }
 
-.card .button-container button:before {
+.button-container button:before {
   content: '';
   position: absolute;
   top: 50%;
@@ -571,25 +561,25 @@ export default {
   transition: .3s ease;
 }
 
-.card .button-container button:hover, 
-.card .button-container button:active, 
-.card .button-container button:focus {
+.button-container button:hover, 
+.button-container button:active, 
+.button-container button:focus {
   border-color: #2f80ec;
 }
 
-.card .button-container button:hover span, 
-.card .button-container button:active span, 
-.card .button-container button:focus span {
+.button-container button:hover span, 
+.button-container button:active span, 
+.button-container button:focus span {
   color: #2f80ec;
 }
 
-.card .button-container button:active span, 
-.card .button-container button:focus span {
+.button-container button:active span, 
+.button-container button:focus span {
   color: #ffffff;
 }
 
-.card .button-container button:active:before, 
-.card .button-container button:focus:before {
+.button-container button:active:before, 
+.button-container button:focus:before {
   opacity: 1;
   -webkit-transform: scale(10);
   transform: scale(10);
@@ -704,7 +694,8 @@ export default {
   background: rgba(255, 255, 255, 0.9);
 }
 
-.card.alt .button-container button:active:before, .card.alt .button-container button:focus:before {
+.card.alt .button-container button:active:before, 
+.card.alt .button-container button:focus:before {
   display: none;
 }
 

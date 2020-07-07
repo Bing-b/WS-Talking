@@ -15,7 +15,7 @@ export default {
   },
   data(){
     return{
-      isRouterActive:true
+      isRouterActive:true,
     }
   },
 
@@ -40,34 +40,6 @@ export default {
 </script>
 
 <style>
-div, p, ul, li, ul li, h1, h2, h3, h4, span, * {
-    margin: 0;
-    padding: 0;
-}
-
-*{
-  font-family:-apple-system,BlinkMacSystemFont,Helvetica Neue,PingFang SC,Microsoft YaHei,
-  Source Han Sans SC,Noto Sans CJK SC,WenQuanYi Micro Hei,sans-serif;
-}
-
-#app{
-  display: flex;
-}
-
-a{
-  text-decoration: none;
-}
-
-ul{
-  padding: 0;
-}
-
-ul li{
-  list-style: none;
-}
-
-button {
-  border: none;
-}
+@import "./assets/css/global.css";
 
 </style>
