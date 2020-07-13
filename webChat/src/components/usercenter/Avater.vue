@@ -2,18 +2,20 @@
 
     <!-- 我的头像 -->
     <div class="my-avater">
-        <header class="flex-head">我的头像</header>
-        <div class="head-box">
+        <header class="ws-head">我的头像</header>
+        <div class="container">
+            <div class="avater">
             <img v-if="!this.$store.state.avater" :src="defaultUser" alt="头像" />
             <img v-else :src="avater" alt="头像" />
-            <div class="upload-box">
-                <a href="javascript:;">
-                    Upload
-                    <input ref="upload" type="file" id="saveImage" class="get-file" name="imgFile"  @change="getImg()"/>
-               </a>
-           </div>
+             <p class="notice">上传图片格式为 jpg、png、jpeg、gif,大小不超过2M</p>
+            
+            </div>
+           <div class="avatar-uploader">
+            <i class="el-icon-plus avatar-uploader-icon"></i>
+             <input ref="upload" type="file" id="saveImage" class="get-file" name="imgFile"  @change="getImg()"/>
+            </div>
         </div>
-        <p class="warn-msg">上传图片格式为 jpg、png、jpeg、gif,大小不超过2M</p>
+        <!-- <p class="notice">上传图片格式为 jpg、png、jpeg、gif,大小不超过2M</p> -->
     </div>
 
 </template>
@@ -28,6 +30,7 @@ export default {
   data() {
     return {
       avater: "",
+      imageUrl:'',
       defaultUser: require("@/assets/img/defaultUser.png")
     };
   },
@@ -59,7 +62,7 @@ export default {
 
     // 获取用户上传图片并上传
     getImg() {
-      var _this = this;
+      var _this = this,
           username = parseInt(sessionStorage.getItem("username")),
           formData = new FormData(),
           file = this.$refs.upload.files[0];
@@ -94,81 +97,71 @@ export default {
 
 .my-avater {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
 }
 
-.head-box {
+.avater {
   display: flex;
   align-items: center;
+}
+.container {
+  display: flex;
   justify-content: space-between;
-  padding: 5px 30px;
+  width: 90%;
+  align-items: center;
+  margin: 20px 25px ;
+ 
 }
 
-.head-box img {
+.container img {
   width: 100px;
   height: 100px;
   border-radius: 50%;
 }
 
-.head-box img:hover {
-  box-shadow: 0 4px 8px 0 rgba(7, 17, 27, .2);
-}
 
-.flex-head {
-  display: flex;
-  justify-content: flex-start;
-  padding: 0 10px;
-  margin-bottom: 20px;
-  border-left: 2px solid #6691fa;
-}
-
-/* 美化上传input */
-.upload-box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-left: 400px;
-  height: 50px;
-  width: 100px;
-}
-
-.upload-box img {
-  position: relative;
-  left: 60px;
-  width: 40px;
-  height: 40px;
-}
-
-.upload-box a {
-  position: relative;
-  display: inline-block;
-  border-radius: 4px;
-  padding: 5px 15px;
-  overflow: hidden;
-  color: #fff;
-  font-size: 12px;
-  font-weight: bold;
-  background-color: #4876ee;
-  text-decoration: none;
-  line-height: 20px;
-}
-
-.upload-box a:hover {
-  background: #4877eed3;
-  box-shadow: 0 4px 8px 0 rgba(7, 17, 27, .2);
-}
-
-.upload-box input {
-  position: absolute;
-  right: 0;
-  top: 0;
-}
 
 .get-file {
-  opacity: 0.4;
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 100px;
+  height: 100px;
+  opacity: 0;
+  cursor:pointer;
 }
 
-.warn-msg {
+.notice {
+  flex: none;
+  width: 200px;
+  height: 40px;
+  font-size: 14px;
   margin-left: 40px;
   color: #949292;
 }
+
+.avatar-uploader {
+  position: relative;
+
+  
+}
+
+ 
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 108px;
+    height: 108px;
+    border:2px dashed #8c939d;
+    border-radius: 5px;
+    line-height: 108px;
+    text-align: center;
+  }
+  .avatar-uploader-icon:hover {
+    border-color:  #3796f6;
+  }
+ 
 </style>

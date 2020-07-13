@@ -1,7 +1,7 @@
 <template>
   <!-- 我的信息 -->
   <div class="my-msg">
-      <header class="flex-head">我的信息</header>
+      <header class="ws-head">我的信息</header>
 
       <div>
           <span>昵称：</span>
@@ -9,7 +9,7 @@
       </div>
 
       <div>
-          <span>用户名：</span>{{username}}
+          <span>账号：</span>{{username}}
       </div>
 
       <div>
@@ -23,7 +23,7 @@
       </div>
 
       <div class="btn-box">
-          <button class="saveBtn" @click="saveMsg()">保存</button>
+          <button class="saveBtn ws-btn" @click="saveMsg()">保存</button>
       </div>
   </div>
   
@@ -110,21 +110,11 @@ export default {
 
 /* 保存按钮 */
 .saveBtn {
-  padding: 3px 20px;
   align-self: flex-end;
   margin-top: 40px;
-  color: #fff;
-  border: 1px solid #dad8d8;
-  border-radius: 4px;
-  background-color: #4876ee;
 }
 
-.flex-head {
-  display: flex;
-  justify-content: flex-start;
-  padding: 0 10px;
-  border-left: 2px solid #6691fa;
-}
+
 
 /* 编辑框样式 */
 .introduction,

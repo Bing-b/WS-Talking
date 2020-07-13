@@ -2,7 +2,7 @@
     
     <!-- 修改密码 -->
     <div class="change-box">
-        <header class="flex-head">修改密码</header>
+        <header class="ws-head">修改密码</header>
         <div class="change-body">
             <div>
                 <span>输入新密码：</span>
@@ -38,13 +38,13 @@ export default {
           if (this.pdw1 == this.pdw2) {
             return true;
           } else {
-            this.$message.warning("2次密码不相同");
+            this.$message.error("2次密码不相同");
           }
         } else {
-          this.$message.warning("请输入确认密码");
+          this.$message.error("请输入确认密码");
         }
       } else {
-        this.$message.warning("请输入更改密码");
+        this.$message.error("请输入更改密码");
       }
     },
 
@@ -133,14 +133,8 @@ export default {
   border: none;
   letter-spacing: 4px;
   color: #fff;
-  background: #4876ee;
+  background: #3796f6;
 }
 
-.flex-head {
-  display: flex;
-  justify-content: flex-start;
-  padding: 0 10px;
-  margin-bottom: 20px;
-  border-left: 2px solid #6691fa;
-}
+
 </style>

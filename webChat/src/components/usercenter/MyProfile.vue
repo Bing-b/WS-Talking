@@ -2,6 +2,7 @@
     
     <!-- 个人中心 -->
     <div class="user-center-box">
+        <header class="ws-head">我的头像</header>
         <div class="box_1">
            <!-- 头像 -->
            <div class="avater-box">
@@ -18,12 +19,12 @@
           </div>
 
           <div>
-            <button class="app-btn" @click="changeMsgBtn()">修改资料</button>
+            <button class="ws-btn" @click="changeMsgBtn()">修改资料</button>
           </div>
       </div>
 
     <div class="box_2">
-        <h4>简介：</h4>
+        <h4>个人简介：</h4>
         <p v-if="this.$store.state.introduction">{{this.$store.state.introduction}}</p>
         <p v-else>简单介绍一下自己吧！</p>
     </div>
@@ -53,8 +54,8 @@ export default {
 </script>
 <style scoped>
 .user-center-box {
-  padding: 0 40px;
   border-radius: 4px;
+  border: 1px solid #dbe2e8;
   width: 100%;
 }
 
@@ -62,10 +63,11 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
+  width: 90%;
   height: 170px;
+  margin: 0 40px;
   background: #ffffff;
-  border-bottom: 1px solid #d3d0d0;
+  border-bottom: 2px solid #c5c5c5;
 }
 .box_1 > div{
   display: flex;
@@ -94,32 +96,27 @@ export default {
 .u-msg span{
   display: inline-block;
   min-width: 200px;
+  max-width: 250px;
+  overflow: hidden;
   text-overflow:ellipsis;
   white-space: nowrap;
 }
 
-.app-btn {
-  flex: none;
-  padding: 3px 10px;
-  border: 1px solid #dad8d8;
-  border-radius: 4px;
-  color: #4D555D !important;
-  background-color: #fff;
-}
-.app-btn:hover {
-  border: 1px solid #6691fa;
-  color: #6691fa;
-  border-radius: 4px;
-}
+
 
 .box_2 {
-  margin-top: 20px;
-  height: 120px;
+  width: 90%;
+  margin: 20px 40px 10px;
+  height: 150px;
 }
 
 .box_2 p {
   margin: 10px 0;
-  text-indent: 50px;
+  border-radius: 5px;
+  padding: 10px;
+  text-indent: 30px;
   color: #7c7a7a;
+  overflow: hidden;
+  text-overflow:ellipsis;
 }
 </style>

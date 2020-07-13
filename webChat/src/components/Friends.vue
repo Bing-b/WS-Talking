@@ -2,19 +2,21 @@
     <div class="friends-box">
     <!-- 联系人列表 -->
     <div class="friends-list">
-        <div class="list-nav">
-            <ul>
-                <li :class="{active:switchType==1, unread: usersUnRead}"  @click="switchType=1">好友</li>
-                <li :class="{active:switchType==2, unread: groupsUnRead}" @click="switchType=2">群聊</li>
-                 <!-- <li :class="{active:switchType==1}"  @click="switchType=1">好友</li>
-                <li :class="{active:switchType==2, unread: groupsUnRead}" @click="switchType=2">群聊</li> -->
-            </ul>
-        </div>
+       <div class="add-container">
+          <el-dropdown trigger="click"  @command="addEvent">
+          <span class="el-dropdown-link add-link"><i class="el-icon-plus"></i></span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="addf">添加好友</el-dropdown-item>
+            <el-dropdown-item command="addg">添加群聊</el-dropdown-item>
+          </el-dropdown-menu>
+          </el-dropdown>
+          </div>
 
-        <!-- 好友列表 -->
-        <div class="list-box">
-            <div class="f-lists">
-                <div class="f-li" @click="triggerFriends(item)" v-if="switchType==1"
+        <el-tabs value="friends"  type="border-card">
+          <el-tab-pane label="好友" name="friends" >
+            <span slot="label"><i class="el-icon-user"></i> 好友</span>
+            <div class="list-box">
+             <div class="f-li" @click="triggerFriends(item)" 
                 v-for="(item,index) in currentUserList" :key="index"
                 >
                    <div class="section">
@@ -22,30 +24,37 @@
                        <img v-else class="user-avater" :src="defaultUser" alt />
                        <div class="user-msg">
                            <p>{{item.nickname}}</p>
-                           <span>{{item.usersign}}</span>
-                           <!-- <span v-else>我就是我是不一样的烟火！</span> -->
+                           <span>签名：{{item.usersign}}</span>
+                          
                        </div>
-                       <span class="unread-tip" v-if="item.unread">{{item.unread}}</span>
+                         <span class="unread-tip" v-if="item.unread">{{item.unread}}</span>
+                      
                    </div>
               </div>
+            
+            </div>
+            
+            
+            </el-tab-pane>
+          <el-tab-pane label="群聊" name="groups" >
+            <span slot="label"><i class="el-icon-chat-dot-square"></i> 群聊</span>
 
-          <!-- 群列表 -->
-          <div class="g-li" @click="triggerGroup(item)" v-if="switchType==2"
-            v-for="item in currentGroup"
-          >
+              <div class="list-box">
+              <div class="g-li" @click="triggerGroup(item)" v-for="(item,index) in currentGroup" :key="index" >
               <img class="user-avater" :src="groupAvater" @click="showDel=!showDel" alt />
               <span class="g-name">{{item.name}}</span>
-              <img v-show="showDel" class="del-group" src="../assets/img/del.png" alt />
+              <span v-show="showDel"><i class="el-icon-delete"></i> </span>
               <span v-if="item.unread" class="unread-tip">{{item.unread}}</span>
               <span v-if="!checkUserIsGroup(item)" @click.stop="addGroup(item)" class="addGroupTip">+</span>
-          </div>
+             </div>
+              </div>
 
-          </div>
-          <div class="addbtn-box">
-              <button class="addBtn" @click="showAddFriend=!showAddFriend">添加好友</button>
-              <button class="addBtn" @click="showAddGroup=!showAddGroup">添加群聊</button>
-          </div>
-      </div>
+          </el-tab-pane>
+
+         
+
+
+        </el-tabs>
     </div>
 
     <!-- 聊天窗口组件 -->
@@ -57,9 +66,9 @@
             </div>
 
             <div class="c-tab">
-                <button @click="con()"><img src="../assets/img/chat.png" alt /></button>
-                <button><img src="../assets/img/video.png" alt /></button>
-                <button><img src="../assets/img/more.png" alt /></button>
+                <button @click="con()"><i class="el-icon-microphone"></i></button>
+                <button><i class="el-icon-video-camera"></i></button>
+                <button><i class="el-icon-more"></i></button>
             </div>
       </div>
 
@@ -90,33 +99,13 @@
 
       <div class="send-box">
           <input v-model="msg" type="text" placeholder="请输入内容..." />
-          <button @click="send()"><img src="../assets/img/send.png" alt /></button>
+          <button @click="send()"><i class="el-icon-s-promotion"></i></button>
       </div>
     </div>
 
-      <!-- 创建群聊弹窗 -->
-      <div class="black" v-show="showAddGroup">
-          <div class="add-box">
-              <header>创建群聊</header>
-              <input type="text" v-model="groupName"  placeholder="请输入群聊名称..." />
-              <div>
-                  <button @click="createGroup()">确定</button>
-                  <button @click="showAddGroup=!showAddGroup">取消</button>
-              </div>
-          </div>
-      </div>
+   
 
-    <!-- 添加好友弹窗 -->
-    <div class="black" v-show="showAddFriend">
-        <div class="add-box">
-            <header>添加好友</header>
-            <input type="text" v-model="fname"  placeholder="请输入好友账号..." />
-            <div>
-                <button @click="addFriend()">确定</button>
-                <button @click="showAddFriend=!showAddFriend">取消</button>
-            </div>
-        </div>
-    </div>
+  
     
   </div>
 </template>
@@ -125,16 +114,15 @@
 import moment from "moment";
 export default {
   name: "Friends",
-  // components:{chats},
 
   data() {
     return {
       switchType: 1,
       title: "选择人聊天",
-      userp: require("@/assets/img/user.jpg"), 
+      userp: require("@/assets/img/user.png"), 
       uid: "",                  // 用户初始化id
       nickname: sessionStorage.getItem("nickname"),
-      groupAvater: require("@/assets/img/user.jpg"),
+      groupAvater: require("@/assets/img/defaultGroup.png"),
       defaultUser: require("@/assets/img/defaultUser.png"),
       avater: sessionStorage.getItem("avater"),
       ws: "",                     // socket对象
@@ -145,8 +133,6 @@ export default {
       groupName: "",
       groups: [],                // 群组
       groupId: "",
-      showAddGroup: false,       //  显示添加群组弹窗
-      showAddFriend: false,      //  显示添加好友弹窗
       showDel: false,
       fname: "",
       frends: []
@@ -289,7 +275,6 @@ export default {
           
           if (!_this.uid) {
             //生成用户id
-            //_this.uid = "user" + moment().valueOf();
             _this.uid = "user" + parseInt(sessionStorage.getItem("username"));
             _this.avater = sessionStorage.getItem("avater");
            sessionStorage.setItem('uid',_this.uid);
@@ -334,9 +319,50 @@ export default {
         };
     },
 
+    // 添加好友触发按钮
+
+    addEvent(command) {
+      if (command == 'addf') {
+
+        this.showAddFriends()
+      }
+      if (command == "addg") {
+        this.showAddGroup()
+      }
+    },
+
+    showAddFriends() {
+        this.$prompt('请输入好友账号', '添加好友', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern:/^1(3|4|5|6|7|8|9)\d{9}$/,
+          inputErrorMessage: '请输入正确的账户'
+        }).then(({ value }) => {
+          this.addFriend(value);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          });       
+        });
+      },
 
 
-
+      showAddGroup() {
+        this.$prompt('请输入群聊名称', '添加群聊', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern:/^[^\s]*$/,
+          inputErrorMessage: '输入信息不可包含空格'
+        }).then(({ value }) => {
+          this.createGroup(value);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          });       
+        });
+      },
 
     // 发送信息按钮
     send() {
@@ -402,18 +428,17 @@ export default {
         return item.uid === this.uid;
       });
     },
-    createGroup() {
+
+    createGroup(gname) {
       this.ws.send(
         JSON.stringify({
           uid: this.uid,
           type: 10,
           nickname: this.nickname,
-          groupName: this.groupName,
+          groupName: gname,
           signal: []
         })
       );
-      this.showAddGroup = false;
-      this.groupName = "";
     },
 
     // 选择群
@@ -428,6 +453,7 @@ export default {
       this.signal = [];
       this.groupId = item.id;
       this.title = item.name;
+      this.userp =this.groupAvater
     },
 
     delGroup(item) {
@@ -455,10 +481,10 @@ export default {
     },
     
     // 添加好友
-    addFriend() {
+    addFriend(f) {
       var _this = this;
       var username = parseInt(sessionStorage.getItem("username"));
-      var fname = parseInt(this.fname);
+      var fname = parseInt(f);
       let data = {
         fname: fname,
         uname: username
@@ -581,6 +607,8 @@ export default {
 
 /* 联系人列表样式 */
 .friends-list {
+  position: relative;
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
   margin: 15px 0;
@@ -610,23 +638,11 @@ export default {
 
 .list-box {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
-  width: 100%;
-  border-top: 1px solid rgb(237, 243, 239);
-}
-
-.f-lists {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   height: 500px;
+  flex-direction: column;
+  flex: 1;
   width: 100%;
-  border-radius: 4px;
-  background: #f1f7fe;
-  overflow-x: hidden;
-  overflow-y: auto;
 }
 
 .user-avater {
@@ -639,14 +655,54 @@ export default {
   display: flex;
   align-items: center;
   padding: 10px 20px;
-  width: 80%;
+  width: 90%;
   cursor: pointer;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: #f1f7fe;
+  border: 1px solid #dbe2e8;
+  border-radius: 5px;
+  margin: 2px 0;
 }
+.f-li:hover {
+  border-color: #c2ced8;;
+}
+
+.add-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+
+.add-link {
+  font-size: 17px;
+}
+
+ .el-dropdown-link {
+    cursor: pointer;
+    color: #409EFF;
+  }
+  .el-icon-arrow-down {
+    font-size: 12px;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 
 .section {
   width: 80%;
   display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .user-msg {
@@ -660,12 +716,12 @@ export default {
   font-weight: 550;
 }
 
-.user-msg span {
+.user-msg span{
   display: inline-block;
   width: 150px;
   height: 20px;
   margin-bottom: 7px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 400;
   color: #aaa;
   overflow: hidden;
@@ -678,13 +734,16 @@ export default {
   display: flex;
   align-items: center;
   padding: 10px 20px;
-  width: 80%;
+  width: 90%;
   cursor: pointer;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  background: #f1f7fe;
+  border: 1px solid #dbe2e8;
+  border-radius: 5px;
+  margin: 2px 0;
 }
 
 .g-li:hover {
-  background-color: #ebeff49c;
+  border-color: #c2ced8;
 }
 .g-name {
   margin-left: 20px;
@@ -711,10 +770,13 @@ export default {
   display: flex;
   flex-direction: column;
   margin: 15px 0 15px 20px;
+  padding: 0 5px;
   flex: auto;
   align-items: center;
-  background: #f1f7fe;
-  border-radius: 4px;
+  background:#f4f4f4;
+  border-radius: 5px;
+  border: 1px solid #dbe2e8;
+    box-shadow: 0 1px 2px rgba(46,61,73,.08);
 }
 
 .c-head {
@@ -727,6 +789,7 @@ export default {
   height: 80px;
   border-radius: 10px;
   background: #fff;
+  border: 1px solid #dbe2e8;
 }
 
 .c-user {
@@ -756,6 +819,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 20px;
   width: 40px;
   height: 40px;
   background: #3877f5f1;
@@ -767,8 +831,8 @@ export default {
   padding: 0 10px;
   margin-top: 10px;
   width: 93%;
-  height: 400px;
-  border: 1px solid rgba(213, 218, 215, 0.541);
+  height: 360px;
+  border: 1px solid #dbe2e8;
   border-radius: 4px;
   overflow-x: hidden;
   overflow-y: auto;
@@ -776,14 +840,14 @@ export default {
 }
 
 /* 滚动条 */
-.f-lists::-webkit-scrollbar,
+.list-box::-webkit-scrollbar,
 .chat-body::-webkit-scrollbar {
   width: 4px;
   height: 8px;
 }
 
 .chat-body::-webkit-scrollbar-thumb,
-.f-lists::-webkit-scrollbar-thumb {
+.list-box::-webkit-scrollbar-thumb {
   height: 10px;
   outline-offset: -2px;
   outline: 2px solid #fff;
@@ -793,7 +857,7 @@ export default {
 }
 
 .chat-body::-webkit-scrollbar-track,
-.f-lists::-webkit-scrollbar-track {
+.list-box::-webkit-scrollbar-track {
   box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
   border-radius: 0;
   background: #fff;
@@ -805,23 +869,35 @@ export default {
   justify-content: space-between;
   height: 60px;
   width: 95%;
-  margin-top: 20px;
+  margin:20px 0 ;
   background: #fff;
   border-radius: 10px;
 }
 
 .send-box input {
-  border: 1px solid #ececec;
+  border: 1px solid #dbe2e8;
   padding: 0 10px;
   width: 90%;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 
 .send-box button {
   width: 80px;
-  background: #3877f5f1;
+  background-color: #3796f6;
   color: #fff;
+  font-size: 30px;
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
+}
+
+.send-box button:hover {
+  color: #3796f6;
+ background: linear-gradient(45deg, rgba(55,150,246,0.5) 0%, rgba(55,150,246,0.05) 100%);
+
+}
+.send-box button:focus {
+  border: none;
 }
 
 .msg-box {
@@ -851,6 +927,12 @@ export default {
 
 .right_2 {
   flex-direction: row-reverse;
+  
+}
+
+.right_1 .message {
+  background: #3796f6;
+  color:#fff;
 }
 
 .users {
@@ -872,18 +954,18 @@ export default {
 }
 
 .message {
-  padding: 10px;
+  padding: 10px 15px;
   width: fit-content;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
   border-radius: 10px;
-  border: 1px solid #efefef;
+  border: 1px solid rgba(133,153,171,0.2);
   font-size: 14px;
-  color: #666;
+  color: #364e65;
   font-weight: 400;
   letter-spacing: 0.3px;
-  background-color: #fff;
+  background-color: rgba(55,150,246,0.1);;
 }
 
 .jion-tip {
@@ -900,53 +982,7 @@ export default {
   border: 1px solid seagreen;
 }
 
-.addbtn-box {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  width: 100%;
-}
 
-/* 弹窗 */
-.add-box {
-  position: absolute;
-  margin-top: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 0;
-  width: 300px;
-  height: 120px;
-  background: #fff;
-  border-radius: 4px;
-  z-index: 111;
-  border: 1px solid #c9c6c6;
-}
-
-.add-box header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  color: #8f8f8f;
-}
-
-.add-box input {
-  padding: 4px 10px;
-  height: 30px;
-  width: 85%;
-  border: 1px solid #dddcdc;
-  border-radius: 4px;
-}
-
-.add-box button {
-  margin-right: 10px;
-  padding: 5px 20px;
-  background: #799bf1;
-  color: #fff;
-  border-radius: 4px;
-}
 
 .addGroupTip {
   display: flex;
@@ -973,12 +1009,13 @@ export default {
 
 /*未读提醒*/
 .unread-tip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 60px;
+  text-align: center;
+  line-height: 18px;
+  margin-left: 20px;
+  flex: none;
   width: 18px;
   height: 18px;
+  font-size: 13px;
   border-radius: 50%;
   background-color: #6080e9;
   color: #fff;
@@ -989,5 +1026,18 @@ export default {
   width: 15px;
   height: 15px;
   margin-left: 20px;
+}
+.friends-list >>> .el-tabs--border-card {
+  border-radius: 5px;
+
+}
+
+.friends-list >>> .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active {
+  border-top-left-radius: 5px;
+}
+
+.friends-list >>> .el-tabs--border-card>.el-tabs__header {
+  background: #f4f4f4;
+  border-radius: 5px;
 }
 </style>

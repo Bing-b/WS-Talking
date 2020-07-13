@@ -231,7 +231,7 @@ export default {
                   this.$store.commit('login',true); 
                   this.getUserMsg();
                   setTimeout(function() { 
-                      this.$router.push("/home")}.bind(this),2000);
+                      this.$router.push("/home")}.bind(this),1000);
                   } 
               })
               .catch( err => {
@@ -291,7 +291,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: url(../assets/img/bg-2.png)repeat;
+    background: url(../assets/img/bg.png)repeat;
     background-color: #f1f1f1;
     position: relative;
     overflow-y: auto;

@@ -25,6 +25,50 @@ ul li {
   list-style: none;
 }
 
-button {
+button,
+input {
   border: none;
+  outline: none;
+}
+
+.el-menu-item {
+  text-align: center;
+  font-size: 15px;
+}
+
+.el-menu {
+  background: #fff;
+  border-right: none;
+  border-radius: 5px;
+}
+
+.el-menu-item:hover {
+  background: #dbe6f1;
+}
+.el-menu-item.is-active {
+  color: #3796f6;
+}
+
+
+.ws-btn {
+  flex: none;
+  padding: 5px 15px;
+  border: 1px solid #dad8d8;
+  border-radius: 4px;
+  color: #ffffff;
+  background-color: #3796f6;
+  box-shadow: 0 4px 8px 0 rgba(7, 17, 27, .1);
+}
+.ws-btn:hover {
+  background: #3797f6a6;
+  border-radius: 4px;
+}
+
+.ws-head {
+  display: flex;
+  justify-content: flex-start;
+  padding: 0 10px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  border-left: 5px solid #6691fa;
 }

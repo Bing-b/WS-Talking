@@ -2,8 +2,17 @@
   <!-- 账户 -->
   <div id="account">
       <div class="left-nav">
-          <header>个人中心</header>
-          <ul>
+          <header>账户设置</header>
+
+            <el-menu :default-active='activeIndex' :router="true" >
+                    <el-menu-item  v-for="(item,i) in navData" :key="i"   :index="item.path">
+                        <template slot="title">
+                        <i :class="item.icon"></i>
+                        <span>{{item.name}}</span>
+                        </template>
+                    </el-menu-item>
+            </el-menu>
+          <!-- <ul>
               <li v-for="(item,i) in navData"
                  :class="{nav_li: active === i}"
                  :key="i"
@@ -12,7 +21,7 @@
               <img :src="item.imgUrl" />
               <span>{{item.name}}</span>
               </li>
-          </ul>    
+          </ul>     -->
        </div>
        
        <!-- 侧边导航切换盒子 -->
@@ -28,30 +37,35 @@ export default {
   data() {
     return {
       active: 0,
+      activeIndex:'',
       navData: [
         {
-          name: "首页",
+          name: "个人中心",
           path: "/MyProfile",
-          imgUrl: require("@/assets/img/home.png")
+          icon:'el-icon-house'
         },
         {
           name: "我的信息",
           path: "/EditInfo",
-          imgUrl: require("@/assets/img/myMsg.png")
+          icon:"el-icon-postcard"
         },
         {
           name: "我的头像",
           path: "/Avater",
-          imgUrl: require("@/assets/img/myPng.png")
+          icon:'el-icon-picture-outline-round'
         },
         {
           name: "修改密码",
           path: "/ChangePwd",
-          imgUrl: require("@/assets/img/pwd.png")
+          icon:'el-icon-lock'
         }
       ]
     };
   },
+
+  mounted () {
+     this.activeIndex = "/"+this.$route.path.split("/")[1];
+  }
 
 
 };
@@ -66,9 +80,11 @@ export default {
 /* 左边导航样式 */
 .left-nav {
   width: 200px;
-  height: 250px;
+  height: 260px;
   background: #fff;
-  border-radius: 4px;
+  border-radius: 5px;
+  border: 1px solid rgba(133,153,171,0.2);
+  box-shadow: 0 4px 8px 0 rgba(7, 17, 27, .1);
 }
 
 header {
@@ -84,23 +100,8 @@ header {
   border-bottom: 1px solid #ececec;
 }
 
-.left-nav li {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 5px 40px;
-  height: 40px;
-}
-
-.left-nav li:first-child {
-  letter-spacing: 14px;
-}
-
-.nav_li {
-  background-color: #6691fa;
-  box-shadow: 2px 2px 3px rgb(184, 183, 183);
-  color: #fff;
-  border-radius: 2px;
+.el-menu {
+  background: #ffffff;
 }
 
 /* 右边切换组件 */

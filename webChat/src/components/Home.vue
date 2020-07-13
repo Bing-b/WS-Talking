@@ -1,52 +1,58 @@
 <template>
-  <div id="Box">
-      <!-- 侧边导航 -->
-      <div class="nav-box">
-          <div class="logo">
-              <img src="../assets/img/LOGO.jpg" alt="logo" />
-              <span class="bule-txt">ws</span>Talking
-          </div>
-          <div class="nav">
-              <ul>
-                  <li v-for="(item,i) in navData"
-                  :class="{nav_li:active === i}"
-                  :key="i"
-                  @click="$router.push({path:item.path}),active = i">
-                  <img :src="item.imgUrl" />
-                  {{item.name}}
-                </li>
-              </ul>
-          </div>
+   <div class="container">
+        <div class="header">
+             <div class="logo">
+                <img src="../assets/img/LOGO.jpg" alt="">
+                <p>ws<span>Talking</span></p>
+            </div>
 
-          <!-- 退出登录 -->
-          <div class="footer">
-              <div class="login-out" @click="loginOut()">
-                  <img :src="out" />
-                  <span>退出</span>
-              </div>
-          </div>
-    </div>
-
-    <div id="rightBox">
-        <!-- 用户头像状态 -->
-        <div class="head-box">
-            <div class="user-msg">
-                <img v-if="!this.$store.state.avater" :src="defaultUser" alt="用户头像" />
-                <img v-else :src="avater" alt="用户头像" />
-                <div class="user-msgs">
-                    <span v-if="!this.$store.state.nickname">{{this.$store.state.username}}</span>
+            <div class="header-user">
+                <div>
+                    <img v-if="!this.$store.state.avater" :src="defaultUser" alt="用户头像" />
+                    <img v-else :src="avater" alt="用户头像" />
+                     <span v-if="!this.$store.state.nickname">{{this.$store.state.username}}</span>
                     <span v-else>{{this.$store.state.nickname}}</span>
-                    <span v-if="this.$store.state.usersign">{{this.$store.state.usersign}}</span>
-                    <span v-else>签名：简单描述一下自己吧！</span>
                 </div>
             </div>
-       </div>
+        </div>
 
-      <!-- body放置其他组件区域 -->
-      <router-view />
+        <div class="main-box">
+        <div class="aside">
+            <div class="user">
+                <div class="user-head"></div>
+                <div class="user-avater">
+                  <img v-if="!this.$store.state.avater" :src="defaultUser" alt="用户头像" />
+                  <img v-else :src="avater" alt="用户头像" />
+                </div>
+                <div class="user-main">
+                    <h3  v-if="!this.$store.state.nickname">{{this.$store.state.username}}</h3>
+                    <h3 v-else>{{this.$store.state.nickname}}</h3>
+                </div>
+            </div>
+            <div class="nav-container">
+                <el-menu :default-active='activeIndex' :router="true" >
+                    <el-menu-item  v-for="(item,i) in navData" :key="i"   :index="item.path">
+                        <template slot="title">
+                        <i :class="item.icon"></i>
+                        <span>{{item.name}}</span>
+                        </template>
+                    </el-menu-item>
+                    <el-menu-item >
+                        <template slot="title">
+                        <i class="el-icon-circle-close"></i>
+                        <span @click="loginOut()">退出</span>
+                        </template>
+                    </el-menu-item> 
+
+                </el-menu>
+            </div>
+        </div>
+        
+        <div class="main">
+            <router-view />
+        </div>
+        </div>
     </div>
-  </div>
-  
 </template>
 
 <script>
@@ -59,7 +65,7 @@ export default {
       active: 0,
       defaultUser: require("@/assets/img/defaultUser.png"),      //默认用户头像
       avater: sessionStorage.getItem("avater"),                  //用户头像
-      out: require("@/assets/img/out.png"),                      //退出登录图标
+      activeIndex:'',
 
       navData: [
         // { 
@@ -70,13 +76,12 @@ export default {
         {
           name: "会话",
           path: "/Friends",
-          imgUrl: require("@/assets/img/msg.png")
-          // imgUrl: require("@/assets/img/friends.png")
+          icon:'el-icon-chat-line-round'
         },
         {
           name: "账户",
           path: "/Account",
-          imgUrl: require("@/assets/img/person.png")
+          icon:"el-icon-user"
         }
       ]
     };
@@ -89,7 +94,10 @@ export default {
       this.avater = this.$store.state.avater;
     }
   },
-
+  mounted (){
+      this.activeIndex = "/"+this.$route.path.split("/")[1];
+    
+  },
   // 监听用户关闭窗口
   // mounted() {
   //     window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))
@@ -109,8 +117,8 @@ export default {
       this.$store.commit("loginOut");
       this.$store.commit("login", false);
       this.$router.push("/");
-    }
-
+    },
+     
     // beforeunloadHandler(){
     //     this._beforeUnload_time=new Date().getTime();
     //   },
@@ -131,134 +139,150 @@ export default {
 
 <style scoped>
 
-#Box {
-  display: flex;
-  flex: 1;
-  width: 100%;
-  height: 100%;
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: 100%; 
+    height: 100%;
+    background-color: #fafafa;
+    overflow-y: auto;
+    position: relative;
+    
 }
-
-.nav-box {
-  flex: none;
-  width: 200px;
-  background-color: #4876ee;
-  background-image: url(../assets/img/bg-2.png);
+.header {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: space-between;
+    width: 85%;
+    padding: 0 80px;
+    border-radius: 10px;
+    margin: 10px 20px 0 20px;
+    height: 80px;
+    background-color: #2d2f32;
+    box-shadow: 0 2px 26px 0 rgba(133,153,171,0.1);
 }
-
-/* 右边模块盒子 */
-#rightBox {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  background-color: #6690fa48;
-}
-
-.head-box {
-  flex: none;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  padding: 0 20px;
-  height: 80px;
-  background-color: #fff;
-  box-shadow: 0 4px 8px 0 rgba(7, 17, 27, .1);
-  overflow: hidden;
-}
-
 .logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 80px;
-  font-size: 25px;
-  background: #fff;
-  border-bottom: 1px solid #c3cadfdc;
-  color: rgb(116, 113, 113);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .logo img {
-  width: 65px;
-  height: 65px;
+    margin-right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.logo p {
+    width: 130px;
+    font-size: 30px;
+    font-weight: 600;
+    color: #3796f6;
+    border-bottom-style: solid;
+    border-bottom-color: #3796f6;
+    border-bottom-width: 2px;
+}
+.logo span {
+    color: #f1f7fe;
+}
+
+.header-user div {
+    display: flex;
+    color: #dadedf;
+    flex-direction: row;
+    margin-left: 50px;
+    width: 200px;
+    overflow: hidden;
+    align-items: center;
+    font-size: 14px;
+}
+.header-user img {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.main-box {
+  flex: 1;
+  border-radius: 5px;
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  
+ 
+}
+
+.aside {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    width: 200px;
+    height: 600px;
+    background:#f7fafdde;
+    background: #ffffff;
+    margin: 30px 30px 20px 60px;
+    border: 1px solid #dbe2e8;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(7, 17, 27, .1);
+    
+
+}
+
+.user {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 250px;
+    border-bottom: 1px solid #cfcfcf;
+   
+}
+
+.user .user-head {
+    width: 100%;
+    height: 100px;
+    background: #3796f6;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+
+}
+.user .user-avater {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    position: absolute;
+    margin-top: 40px;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1)
+}
+.user .user-avater img {
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1)
+}
+.user .user-main {
+    flex: 1;
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0 0;
 }
 
-.bule-txt {
-  color: #007bff;
+.main {
+    flex: 1;
+    min-width: 800px;
+    height: 600px;
+    margin: 30px 60px 0 0;
+    background: #fff;
+    border: 1px solid #dbe2e8;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px 0 rgba(7, 17, 27, .1);
 }
 
-/* 导航部分样式 */
-.nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: 50px;
-  height: 200px;
-}
-
-.nav li {
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  justify-content: space-around;
-  height: 50px;
-  width: 80%;
-  border-radius: 4px;
-  color: #fff;
-}
-
-.nav_li {
-  background: #2359d6;
-}
-
-.nav li:hover {
-  background-color: #0a0a0a2a;
-}
-
-/* 顶部用户信息栏样式 */
-.user-msg {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  right: 100px;
-  width: 400px;
-  height: 40px;
-  color: #a9a9ac;
-  border-left: 2px solid #e6e7e9;
-}
-
-.user-msg img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  border: 1px solid rgb(233, 230, 230);
-}
-
-.user-msgs {
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-  font-size: 15px;
-}
-
-.footer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.login-out {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  margin-top: 350px;
-  height: 30px;
-  width: 70px;
-  color: #fff;
-  border-radius: 4px;
-}
-
-.login-out:hover {
-  background-color: #0a0a0a2a;
-}
 </style>

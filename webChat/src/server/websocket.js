@@ -116,7 +116,7 @@ var wsServer = ws.createServer(function (connWs) {
                 });
                 break;
             // 创建群
-            case 10:
+            case 10: 
                 groups.push({
                     id: moment().valueOf(),
                     name: obj.groupName,
