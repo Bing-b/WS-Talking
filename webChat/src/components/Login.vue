@@ -40,12 +40,12 @@
                     <!-- 注册表单 -->
                    <form>
                        <div class="input-container">
-                           <input type="text" v-model="username" id="username" autocomplete="off" required>
+                           <input  type="text" v-model="username" id="username" placeholder="手机号码" autocomplete="off" required>
                            <label for="username">用户名</label>
                            <div class="bar"></div>
                        </div>
                        <div class="input-container">
-                           <input type="password" v-model="password" id="pwd" autocomplete="off" required>
+                           <input type="password" v-model="password" id="pwd" placeholder="6-8位数字、字母、字符组合" autocomplete="off" required>
                            <label for="pwd">密码</label>
                            <div class="bar"></div>
                        </div>
@@ -174,6 +174,7 @@ export default {
         reg(){
             let data = {
                 username: this.username,
+                // md5加密用户密码
                 password: this.$md5(this.password)
             };
             this.$axios.post("/api/users/addUser",data)
@@ -217,7 +218,7 @@ export default {
             } else {
                 this.$axios.post("/api/users/selectUser",data)
                 .then( res => {
-                  console.log(res.data);
+                  //console.log(res.data);
 
                   if (res.data == -1) {
                   this.$message.error({message:'请确认用户名是否输入正确'});
@@ -260,8 +261,6 @@ export default {
                     let nickname = result.nickname;
                     let introduction = result.introduction;
                     let avater = result.avater;
-                    // 将用户头像存入本地
-                    localStorage.setItem('avater',avater);
                     // 保存用户信息到vuex
                     this.$store.commit('getUser',username);
                     this.$store.commit('getNickName',nickname);
@@ -284,35 +283,43 @@ export default {
 
 <style scoped>
 @import "../assets/css/font-awesome/css/font-awesome.min.css";
+input::-webkit-input-placeholder {
+  font-size: 14px;
+  color: transparent;
+}
+
+input:focus::-webkit-input-placeholder {
+  color: #fff;
+}
 
 .body {
+    position: relative;
+    display: flex;
     width: 100%;
     height: 100vh;
-    display: flex;
     flex-direction: column;
     align-items: center;
     background: url(../assets/img/bg.png)repeat;
     background-color: #f1f1f1;
-    position: relative;
     overflow-y: auto;
     background-attachment: fixed;
 }
 
 .header {
+  display: flex;
+  justify-content: center;
   margin-top: 20px;
   width: 300px;
   height: 60px;
-  display: flex;
   font-size: 40px;
   font-weight: 600;
   text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.336);
-  justify-content: center;
 }
 
 .header img {
+  margin-right: 30px;
   width: 60px;
   height: 60px;
-  margin-right: 30px;
   border-radius: 50%;
 }
 
@@ -321,13 +328,13 @@ export default {
 }
 
 .code-box {
+  position: absolute;
+  right: 0;
+  top: 10px;
   width: 100px;
   height: 40px;
   cursor: pointer;
-  right: 0;
-  top: 10px;
   z-index: 1;
-  position: absolute;
 
 }
 
@@ -344,7 +351,6 @@ export default {
   width: 440px;
   margin-top: 50px;
 }
-
 
 .container.active .card:first-child {
   background: #f2f2f2;
@@ -407,22 +413,22 @@ export default {
 }
 
 .card:first-child {
+  margin: 0 10px;
+  padding: 0;
   background: #fafafa;
   height: 10px;
   border-radius: 5px 5px 0 0;
-  margin: 0 10px;
-  padding: 0;
 }
 
 .card .title {
   position: relative;
-  z-index: 1;
-  border-left: 5px solid #2f80ec;
   margin: 0 0 35px;
   padding: 10px 0 10px 50px;
   color: #2f80ec;
   font-size: 32px;
   font-weight: 600;
+  z-index: 1;
+  border-left: 5px solid #2f80ec;
 }
 
 .input-container {

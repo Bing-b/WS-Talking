@@ -2,31 +2,25 @@
   <!-- 我的信息 -->
   <div class="my-msg">
       <header class="ws-head">我的信息</header>
-
       <div>
           <span>昵称：</span>
           <input v-model="nickname" type="text" class="nickNameTxt" placeholder="编辑昵称..." />
       </div>
-
       <div>
           <span>账号：</span>{{username}}
       </div>
-
       <div>
           <span>我的签名：</span>
           <input v-model="usersign" class="sign-txt" placeholder="编辑签名..." />
       </div>
-
       <div style="margin-top:40px">
           <span>简介：</span>
           <textarea class="introduction" v-model="introduction" placeholder="简单描述一下自己吧..."></textarea>
       </div>
-
       <div class="btn-box">
           <button class="saveBtn ws-btn" @click="saveMsg()">保存</button>
       </div>
   </div>
-  
 </template>
 
 <script>
@@ -113,8 +107,6 @@ export default {
   align-self: flex-end;
   margin-top: 40px;
 }
-
-
 
 /* 编辑框样式 */
 .introduction,

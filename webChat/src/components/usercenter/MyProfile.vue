@@ -1,5 +1,4 @@
-<template>
-    
+<template> 
     <!-- 个人中心 -->
     <div class="user-center-box">
         <header class="ws-head">我的头像</header>

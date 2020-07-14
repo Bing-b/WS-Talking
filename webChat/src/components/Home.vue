@@ -1,58 +1,57 @@
 <template>
    <div class="container">
-        <div class="header">
-             <div class="logo">
-                <img src="../assets/img/LOGO.jpg" alt="">
-                <p>ws<span>Talking</span></p>
-            </div>
+       <div class="header">
+           <div class="logo">
+               <img src="../assets/img/LOGO.jpg" alt="">
+               <p>ws<span>Talking</span></p>
+           </div>
 
-            <div class="header-user">
-                <div>
-                    <img v-if="!this.$store.state.avater" :src="defaultUser" alt="用户头像" />
-                    <img v-else :src="avater" alt="用户头像" />
-                     <span v-if="!this.$store.state.nickname">{{this.$store.state.username}}</span>
-                    <span v-else>{{this.$store.state.nickname}}</span>
-                </div>
+           <div class="header-user">
+               <div>
+                   <img v-if="!this.$store.state.avater" :src="defaultUser" alt="用户头像" />
+                   <img v-else :src="avater" alt="用户头像" />
+                   <span v-if="!this.$store.state.nickname">{{this.$store.state.username}}</span>
+                   <span v-else>{{this.$store.state.nickname}}</span>
+               </div>
             </div>
-        </div>
+       </div>
 
-        <div class="main-box">
-        <div class="aside">
-            <div class="user">
-                <div class="user-head"></div>
-                <div class="user-avater">
-                  <img v-if="!this.$store.state.avater" :src="defaultUser" alt="用户头像" />
-                  <img v-else :src="avater" alt="用户头像" />
-                </div>
-                <div class="user-main">
-                    <h3  v-if="!this.$store.state.nickname">{{this.$store.state.username}}</h3>
-                    <h3 v-else>{{this.$store.state.nickname}}</h3>
-                </div>
-            </div>
-            <div class="nav-container">
-                <el-menu :default-active='activeIndex' :router="true" >
-                    <el-menu-item  v-for="(item,i) in navData" :key="i"   :index="item.path">
+       <div class="main-box">
+           <div class="aside">
+               <div class="user">
+                   <div class="user-head"></div>
+                   <div class="user-avater">
+                       <img v-if="!this.$store.state.avater" :src="defaultUser" alt="用户头像" />
+                       <img v-else :src="avater" alt="用户头像" />
+                   </div>
+                   <div class="user-main">
+                       <h3  v-if="!this.$store.state.nickname">{{this.$store.state.username}}</h3>
+                       <h3 v-else>{{this.$store.state.nickname}}</h3>
+                   </div>
+               </div>
+           <div class="nav-container">
+               <el-menu :default-active='activeIndex' :router="true" >
+                   <el-menu-item  v-for="(item,i) in navData" :key="i"   :index="item.path">
+                       <template slot="title">
+                           <i :class="item.icon"></i>
+                           <span>{{item.name}}</span>
+                       </template>
+                   </el-menu-item>
+                   <el-menu-item >
                         <template slot="title">
-                        <i :class="item.icon"></i>
-                        <span>{{item.name}}</span>
-                        </template>
-                    </el-menu-item>
-                    <el-menu-item >
-                        <template slot="title">
-                        <i class="el-icon-circle-close"></i>
-                        <span @click="loginOut()">退出</span>
+                            <i class="el-icon-circle-close"></i>
+                            <span @click="loginOut()">退出</span>
                         </template>
                     </el-menu-item> 
-
                 </el-menu>
-            </div>
-        </div>
+          </div>
+      </div>
         
-        <div class="main">
-            <router-view />
-        </div>
-        </div>
-    </div>
+      <div class="main">
+          <router-view />
+      </div>
+  </div>
+</div>
 </template>
 
 <script>
@@ -66,13 +65,7 @@ export default {
       defaultUser: require("@/assets/img/defaultUser.png"),      //默认用户头像
       avater: sessionStorage.getItem("avater"),                  //用户头像
       activeIndex:'',
-
       navData: [
-        // { 
-        //   name: "消息",
-        //   path: "/MsgList",
-        //   imgUrl: require("@/assets/img/msg.png")
-        // },
         {
           name: "会话",
           path: "/Friends",
@@ -94,6 +87,7 @@ export default {
       this.avater = this.$store.state.avater;
     }
   },
+
   mounted (){
       this.activeIndex = "/"+this.$route.path.split("/")[1];
     
@@ -138,8 +132,8 @@ export default {
 </script>
 
 <style scoped>
-
 .container {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -147,10 +141,9 @@ export default {
     min-height: 100%; 
     height: 100%;
     background-color: #fafafa;
-    overflow-y: auto;
-    position: relative;
-    
+    overflow-y: auto; 
 }
+
 .header {
     display: flex;
     flex: none;
@@ -164,6 +157,7 @@ export default {
     background-color: #2d2f32;
     box-shadow: 0 2px 26px 0 rgba(133,153,171,0.1);
 }
+
 .logo {
     display: flex;
     flex-direction: row;
@@ -176,6 +170,7 @@ export default {
     height: 50px;
     border-radius: 50%;
 }
+
 .logo p {
     width: 130px;
     font-size: 30px;
@@ -185,6 +180,7 @@ export default {
     border-bottom-color: #3796f6;
     border-bottom-width: 2px;
 }
+
 .logo span {
     color: #f1f7fe;
 }
@@ -199,6 +195,7 @@ export default {
     align-items: center;
     font-size: 14px;
 }
+
 .header-user img {
     display: inline-block;
     width: 40px;
@@ -209,12 +206,9 @@ export default {
 
 .main-box {
   flex: 1;
-  border-radius: 5px;
   display: flex;
   width: 100%;
   box-sizing: border-box;
-  
- 
 }
 
 .aside {
@@ -223,14 +217,10 @@ export default {
     flex-direction: column;
     width: 200px;
     height: 600px;
-    background:#f7fafdde;
     background: #ffffff;
     margin: 30px 30px 20px 60px;
     border: 1px solid #dbe2e8;
-    border-radius: 5px;
     box-shadow: 0 4px 8px 0 rgba(7, 17, 27, .1);
-    
-
 }
 
 .user {
@@ -240,7 +230,6 @@ export default {
     width: 100%;
     height: 250px;
     border-bottom: 1px solid #cfcfcf;
-   
 }
 
 .user .user-head {
@@ -249,8 +238,8 @@ export default {
     background: #3796f6;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
-
 }
+
 .user .user-avater {
     width: 120px;
     height: 120px;
@@ -259,12 +248,14 @@ export default {
     margin-top: 40px;
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1)
 }
+
 .user .user-avater img {
   width: 120px;
   height: 120px;
   border-radius: 50%;
   box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.1)
 }
+
 .user .user-main {
     flex: 1;
     margin-top: 60px;
@@ -281,8 +272,14 @@ export default {
     margin: 30px 60px 0 0;
     background: #fff;
     border: 1px solid #dbe2e8;
-    border-radius: 5px;
     box-shadow: 0 4px 8px 0 rgba(7, 17, 27, .1);
+}
+
+.main-box,
+.main,
+.aside
+{
+    border-radius: 5px;
 }
 
 </style>

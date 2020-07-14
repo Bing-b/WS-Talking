@@ -1,5 +1,4 @@
 <template>
-    
     <!-- 修改密码 -->
     <div class="change-box">
         <header class="ws-head">修改密码</header>
@@ -8,15 +7,13 @@
                 <span>输入新密码：</span>
                 <input v-model="pdw1" type="password" class="pwd1" placeholder="6-8位数字和字母组合" />
             </div>
-        <div>
-            <span>确认新密码：</span>
-            <input v-model="pdw2" type="password" class="pwd2" placeholder="确认密码" />
-        </div>
-
-        <button @click="saveBtn">保存</button>
+            <div>
+                <span>确认新密码：</span>
+                <input v-model="pdw2" type="password" class="pwd2" placeholder="确认密码" />
+            </div>
+            <button @click="saveBtn">保存</button>
        </div>
    </div>
-   
 </template>
 
 <script>

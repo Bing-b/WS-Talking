@@ -3,26 +3,15 @@
   <div id="account">
       <div class="left-nav">
           <header>账户设置</header>
-
-            <el-menu :default-active='activeIndex' :router="true" >
-                    <el-menu-item  v-for="(item,i) in navData" :key="i"   :index="item.path">
-                        <template slot="title">
-                        <i :class="item.icon"></i>
-                        <span>{{item.name}}</span>
-                        </template>
-                    </el-menu-item>
-            </el-menu>
-          <!-- <ul>
-              <li v-for="(item,i) in navData"
-                 :class="{nav_li: active === i}"
-                 :key="i"
-                 @click="$router.push({path:item.path}),active = i"
-              >
-              <img :src="item.imgUrl" />
-              <span>{{item.name}}</span>
-              </li>
-          </ul>     -->
-       </div>
+              <el-menu :default-active='activeIndex' :router="true" >
+                  <el-menu-item  v-for="(item,i) in navData" :key="i"   :index="item.path">
+                      <template slot="title">
+                          <i :class="item.icon"></i>
+                          <span>{{item.name}}</span>
+                      </template>
+                  </el-menu-item>
+              </el-menu>
+      </div>
        
        <!-- 侧边导航切换盒子 -->
        <div class="r-box">

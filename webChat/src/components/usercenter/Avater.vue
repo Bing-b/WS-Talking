@@ -1,23 +1,19 @@
 <template>
-
     <!-- 我的头像 -->
     <div class="my-avater">
         <header class="ws-head">我的头像</header>
         <div class="container">
             <div class="avater">
-            <img v-if="!this.$store.state.avater" :src="defaultUser" alt="头像" />
-            <img v-else :src="avater" alt="头像" />
-             <p class="notice">上传图片格式为 jpg、png、jpeg、gif,大小不超过2M</p>
-            
+                <img v-if="!this.$store.state.avater" :src="defaultUser" alt="头像" />
+                <img v-else :src="avater" alt="头像" />
+                <p class="notice">上传图片格式为 jpg、png、jpeg、gif,大小不超过2M</p>
             </div>
-           <div class="avatar-uploader">
-            <i class="el-icon-plus avatar-uploader-icon"></i>
-             <input ref="upload" type="file" id="saveImage" class="get-file" name="imgFile"  @change="getImg()"/>
+            <div class="avatar-uploader">
+                <i class="el-icon-plus avatar-uploader-icon"></i>
+                <input ref="upload" type="file" id="saveImage" class="get-file" name="imgFile"  @change="getImg()"/>
             </div>
         </div>
-        <!-- <p class="notice">上传图片格式为 jpg、png、jpeg、gif,大小不超过2M</p> -->
     </div>
-
 </template>
 
 <script>
@@ -107,6 +103,7 @@ export default {
   display: flex;
   align-items: center;
 }
+
 .container {
   display: flex;
   justify-content: space-between;
@@ -122,8 +119,26 @@ export default {
   border-radius: 50%;
 }
 
+.avatar-uploader {
+  position: relative;
+}
 
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 108px;
+  height: 108px;
+  border:2px dashed #8c939d;
+  border-radius: 5px;
+  line-height: 108px;
+  text-align: center;
+}
 
+.avatar-uploader-icon:hover {
+  border-color:  #3796f6;
+}
+
+/* input file 美化*/
 .get-file {
   position: absolute;
   left: 4px;
@@ -143,25 +158,4 @@ export default {
   color: #949292;
 }
 
-.avatar-uploader {
-  position: relative;
-
-  
-}
-
- 
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 108px;
-    height: 108px;
-    border:2px dashed #8c939d;
-    border-radius: 5px;
-    line-height: 108px;
-    text-align: center;
-  }
-  .avatar-uploader-icon:hover {
-    border-color:  #3796f6;
-  }
- 
 </style>

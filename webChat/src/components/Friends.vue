@@ -1,112 +1,93 @@
 <template>
-    <div class="friends-box">
-    <!-- 联系人列表 -->
-    <div class="friends-list">
-       <div class="add-container">
-          <el-dropdown trigger="click"  @command="addEvent">
-          <span class="el-dropdown-link add-link"><i class="el-icon-plus"></i></span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="addf">添加好友</el-dropdown-item>
-            <el-dropdown-item command="addg">添加群聊</el-dropdown-item>
-          </el-dropdown-menu>
-          </el-dropdown>
-          </div>
-
-        <el-tabs value="friends"  type="border-card">
-          <el-tab-pane label="好友" name="friends" >
-            <span slot="label"><i class="el-icon-user"></i> 好友</span>
-            <div class="list-box">
-             <div class="f-li" @click="triggerFriends(item)" 
-                v-for="(item,index) in currentUserList" :key="index"
-                >
-                   <div class="section">
-                       <img v-if="item.avater" class="user-avater" :src="item.avater" alt />
-                       <img v-else class="user-avater" :src="defaultUser" alt />
-                       <div class="user-msg">
-                           <p>{{item.nickname}}</p>
-                           <span>签名：{{item.usersign}}</span>
-                          
-                       </div>
-                         <span class="unread-tip" v-if="item.unread">{{item.unread}}</span>
-                      
-                   </div>
-              </div>
-            
+    <div class="friends-container">
+        <!-- 联系人列表 -->
+        <div class="friends-list">
+            <div class="add-container">
+                <el-dropdown trigger="click"  @command="addEvent">
+                    <span class="el-dropdown-link add-link"><i class="el-icon-plus"></i></span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="addf">添加好友</el-dropdown-item>
+                        <el-dropdown-item command="addg">添加群聊</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
             </div>
-            
-            
-            </el-tab-pane>
-          <el-tab-pane label="群聊" name="groups" >
-            <span slot="label"><i class="el-icon-chat-dot-square"></i> 群聊</span>
-
-              <div class="list-box">
-              <div class="g-li" @click="triggerGroup(item)" v-for="(item,index) in currentGroup" :key="index" >
-              <img class="user-avater" :src="groupAvater" @click="showDel=!showDel" alt />
-              <span class="g-name">{{item.name}}</span>
-              <span v-show="showDel"><i class="el-icon-delete"></i> </span>
-              <span v-if="item.unread" class="unread-tip">{{item.unread}}</span>
-              <span v-if="!checkUserIsGroup(item)" @click.stop="addGroup(item)" class="addGroupTip">+</span>
-             </div>
-              </div>
-
-          </el-tab-pane>
-
-         
-
-
-        </el-tabs>
-    </div>
-
-    <!-- 聊天窗口组件 -->
-    <div class="chat-box">
-        <div class="c-head">
-            <div class="c-user">
-                <img  :src="userp" alt />
-                <span>{{title}}</span>
-            </div>
-
-            <div class="c-tab">
-                <button @click="con()"><i class="el-icon-microphone"></i></button>
-                <button><i class="el-icon-video-camera"></i></button>
-                <button><i class="el-icon-more"></i></button>
-            </div>
-      </div>
-
-      <!-- 消息框 -->
-      <div class="chat-body">
-          <div v-for="(item,index) in currentMsg" :key="index">
-              <template v-if="item.type===1">
-                  <p class="jion-tip">{{item.msg}}</p>
-              </template>
-
-              <template v-else>
-                  <div class="msg-box" :class="{right_1: item.uid == uid}">
-                      <div class="msg-body" :class="{right_2: item.uid == uid}">
-                          <img v-if="!avater" :src="defaultUser" alt />
-                          <img v-else-if="item.uid==uid" :src="avater" alt />
-                          <img v-else :src="item.avater" alt />
-
-                          <div class="users">
-                              <span>{{item.nickname}}</span>
-                              <p>{{item.date}}</p>
-                         </div>
-                     </div>
-                     <div class="message">{{item.msg}}</div>
-                 </div>
-             </template>
+            <!-- 好友列表 -->
+            <el-tabs value="friends"  type="border-card">
+                <el-tab-pane label="好友" name="friends" >
+                    <span slot="label"><i class="el-icon-user"></i> 好友</span>
+                    <div class="list-box">
+                        <div class="f-li" @click="triggerFriends(item)" v-for="(item,index) in currentUserList" :key="index">
+                            <div class="section">
+                               <img v-if="item.avater" class="user-avater" :src="item.avater" alt />
+                               <img v-else class="user-avater" :src="defaultUser" alt />
+                               <div class="user-msg">
+                                   <p>{{item.nickname}}</p>
+                                   <span>签名：{{item.usersign}}</span>
+                               </div>
+                               <span class="unread-tip" v-if="item.unread">{{item.unread}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </el-tab-pane>
+                <!-- 群聊列表 -->
+                <el-tab-pane label="群聊" name="groups" >
+                    <span slot="label"><i class="el-icon-chat-dot-square"></i> 群聊</span>
+                    <div class="list-box">
+                        <div class="g-li" @click="triggerGroup(item)" v-for="(item,index) in currentGroup" :key="index" >
+                            <img class="user-avater" :src="groupAvater"  alt />
+                            <span class="g-name">{{item.name}}</span>
+                            <span class="showDel" @click="delGroup(item)"><i class="el-icon-delete"></i> </span>
+                            <span v-if="item.unread" class="unread-tip">{{item.unread}}</span>
+                            <span v-if="!checkUserIsGroup(item)" @click.stop="addGroup(item)" class="addGroupTip">+</span>
+                        </div>
+                    </div>
+                </el-tab-pane>
+            </el-tabs>
         </div>
-     </div>
+        <!-- 聊天窗口组件 -->
+        <div class="chat-box">
+            <div class="c-head">
+                <div class="c-user">
+                    <img  :src="userp" alt />
+                    <span>{{title}}</span>
+                </div>
 
-      <div class="send-box">
-          <input v-model="msg" type="text" placeholder="请输入内容..." />
-          <button @click="send()"><i class="el-icon-s-promotion"></i></button>
-      </div>
+                <div class="c-tab">
+                    <button @click="con()"><i class="el-icon-microphone"></i></button>
+                    <button><i class="el-icon-video-camera"></i></button>
+                    <button><i class="el-icon-more"></i></button>
+                </div>
+            </div>
+
+        <!-- 消息框 -->
+        <div class="chat-body">
+            <div v-for="(item,index) in currentMsg" :key="index">
+                <template v-if="item.type===1">
+                    <p class="jion-tip">{{item.msg}}</p>
+                </template>
+
+                <template v-else>
+                    <div class="msg-box" :class="{right_1: item.uid == uid}">
+                        <div class="msg-body" :class="{right_2: item.uid == uid}">
+                            <img v-if="!avater" :src="defaultUser" alt />
+                            <img v-else-if="item.uid==uid" :src="avater" alt />
+                            <img v-else :src="item.avater" alt />    
+                            <div class="users">
+                                <span>{{item.nickname}}</span>
+                                <p>{{item.date}}</p>
+                            </div>
+                        </div>
+                        <div class="message">{{item.msg}}</div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <div class="send-box">
+           <input v-model="msg" type="text" placeholder="请输入内容..." />
+           <button @click="send()"><i class="el-icon-s-promotion"></i></button>
+        </div>
     </div>
-
-   
-
-  
-    
   </div>
 </template>
 
@@ -117,7 +98,6 @@ export default {
 
   data() {
     return {
-      switchType: 1,
       title: "选择人聊天",
       userp: require("@/assets/img/user.png"), 
       uid: "",                  // 用户初始化id
@@ -133,7 +113,6 @@ export default {
       groupName: "",
       groups: [],                // 群组
       groupId: "",
-      showDel: false,
       fname: "",
       frends: []
     };
@@ -245,8 +224,7 @@ export default {
         }).length
         return user;
       });
-      //debugger
-      return _this.users.filter(user => {
+        return _this.users.filter(user => {
         return user.uid !=_this.uid;
       });
     }
@@ -298,7 +276,6 @@ export default {
         };
 
         //接收消息
-
         ws.onmessage = function(e) {
           let msg = JSON.parse(e.data);
           console.log(msg);
@@ -320,17 +297,15 @@ export default {
     },
 
     // 添加好友触发按钮
-
     addEvent(command) {
       if (command == 'addf') {
-
         this.showAddFriends()
       }
       if (command == "addg") {
         this.showAddGroup()
       }
     },
-
+    // 显示弹窗
     showAddFriends() {
         this.$prompt('请输入好友账号', '添加好友', {
           confirmButtonText: '确定',
@@ -346,7 +321,6 @@ export default {
           });       
         });
       },
-
 
       showAddGroup() {
         this.$prompt('请输入群聊名称', '添加群聊', {
@@ -418,10 +392,14 @@ export default {
           signal: []
         })
       );
-      alert(`'成功加入'+${item.name}+'`);
+      this.$notify({
+          title: '成功',
+          message: `成功加入群：${item.name}`,
+          type: 'success'
+        });
+ 
     },
-    // 删除群
-
+  
     // 判断是否是群成员
     checkUserIsGroup(item) {
       return item.users.some(item => {
@@ -456,15 +434,16 @@ export default {
       this.userp =this.groupAvater
     },
 
+  // 删除群
     delGroup(item) {
-      this.ws.send(
-        JSON.stringify({
-          uid: this.uid,
-          type: 22,
-          nickname: this.nickname,
-          signal: []
-        })
-      );
+      // this.ws.send(
+      //   JSON.stringify({
+      //     uid: this.uid,
+      //     type: 22,
+      //     nickname: this.nickname,
+      //     signal: []
+      //   })
+      // );
     },
 
     // 选择好友
@@ -589,7 +568,7 @@ export default {
 </script>
 
 <style  scoped>
-.friends-box {
+.friends-container {
   display: flex;
   flex: 1;
   justify-content: space-between;
@@ -597,7 +576,7 @@ export default {
 }
 
 /* 清除浮动影响 */
-.friends-box::after {
+.friends-container::after {
   content: "";
   display: block;
   height: 0;
@@ -616,24 +595,18 @@ export default {
   width: 350px;
 }
 
-.list-nav {
-  height: 50px;
-  width: 100%;
-  background: #799bf1;
-  border-top-right-radius: 4px;
-  border-top-left-radius: 4px;
-  color: #fff;
+.friends-list >>> .el-tabs--border-card {
+  border-radius: 5px;
+
 }
 
-.list-nav li {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  float: left;
-  width: 175px;
-  height: 50px;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
+.friends-list >>> .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active {
+  border-top-left-radius: 5px;
+}
+
+.friends-list >>> .el-tabs--border-card>.el-tabs__header {
+  background: #f4f4f4;
+  border-radius: 5px;
 }
 
 .list-box {
@@ -650,22 +623,36 @@ export default {
   width: 40px;
   border-radius: 50%;
 }
-
-.f-li {
+/* 联系人、群item样式 */
+.f-li,
+.g-li {
   display: flex;
   align-items: center;
+  margin: 2px 0;
   padding: 10px 20px;
   width: 90%;
   cursor: pointer;
   background: #f1f7fe;
   border: 1px solid #dbe2e8;
   border-radius: 5px;
-  margin: 2px 0;
 }
-.f-li:hover {
+
+.g-li {
+  position: relative;
+}
+
+.f-li:hover,
+.g-li:hover {
   border-color: #c2ced8;;
 }
 
+.section {
+  width: 80%;
+  display: flex;
+  align-items: center;
+}
+
+/* 添加好友、群 */
 .add-container {
   position: absolute;
   top: 10px;
@@ -677,40 +664,20 @@ export default {
   font-size: 17px;
 }
 
- .el-dropdown-link {
-    cursor: pointer;
-    color: #409EFF;
-  }
-  .el-icon-arrow-down {
-    font-size: 12px;
-  }
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409EFF;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-.section {
-  width: 80%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+.el-icon-arrow-down {
+  font-size: 12px;
 }
 
 .user-msg {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-left: 10px;
-  margin-top: 5px;
+  margin:6px 0 0 10px;
   color: #383737;
   font-size: 15px;
   font-weight: 550;
@@ -729,40 +696,25 @@ export default {
   white-space: nowrap;
 
 }
-
-.g-li {
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-  width: 90%;
-  cursor: pointer;
-  background: #f1f7fe;
-  border: 1px solid #dbe2e8;
-  border-radius: 5px;
-  margin: 2px 0;
+/* 删除群图标 */
+.showDel {
+  position: absolute;
+  display: none;
+  color: #3796f6;
+  right: 15px;
 }
 
-.g-li:hover {
-  border-color: #c2ced8;
+.g-li:hover .showDel {
+  display: block;
+  z-index: 1;
 }
+
 .g-name {
   margin-left: 20px;
   font-size: 14px;
   color: #404042;
   font-weight: 600;
   line-height: 1.5;
-}
-
-.addBtn {
-  padding: 10px 20px;
-  border-radius: 4px;
-  background-color: #4876ee;
-  color: #fff;
-}
-
-.active {
-  background: #fff;
-  color: rgb(116, 113, 113);
 }
 
 /* 聊天窗口样式 */
@@ -776,7 +728,7 @@ export default {
   background:#f4f4f4;
   border-radius: 5px;
   border: 1px solid #dbe2e8;
-    box-shadow: 0 1px 2px rgba(46,61,73,.08);
+  box-shadow: 0 1px 2px rgba(46,61,73,.08);
 }
 
 .c-head {
@@ -893,13 +845,9 @@ export default {
 
 .send-box button:hover {
   color: #3796f6;
- background: linear-gradient(45deg, rgba(55,150,246,0.5) 0%, rgba(55,150,246,0.05) 100%);
-
+  background: linear-gradient(45deg, rgba(55,150,246,0.5) 0%, rgba(55,150,246,0.05) 100%);
 }
-.send-box button:focus {
-  border: none;
-}
-
+/* 消息列表盒子 */
 .msg-box {
   display: flex;
   flex-direction: column;
@@ -952,7 +900,7 @@ export default {
   font-weight: 500;
   color: #aaa;
 }
-
+/* 消息文本盒子 */
 .message {
   padding: 10px 15px;
   width: fit-content;
@@ -977,13 +925,6 @@ export default {
   text-align: center;
 }
 
-.addg {
-  height: 40px;
-  border: 1px solid seagreen;
-}
-
-
-
 .addGroupTip {
   display: flex;
   align-items: center;
@@ -994,17 +935,6 @@ export default {
   border-radius: 50%;
   color: #fff;
   background: coral;
-}
-
-.black {
-  display: flex;
-  justify-content: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.4);
 }
 
 /*未读提醒*/
@@ -1027,17 +957,5 @@ export default {
   height: 15px;
   margin-left: 20px;
 }
-.friends-list >>> .el-tabs--border-card {
-  border-radius: 5px;
 
-}
-
-.friends-list >>> .el-tabs--border-card>.el-tabs__header .el-tabs__item.is-active {
-  border-top-left-radius: 5px;
-}
-
-.friends-list >>> .el-tabs--border-card>.el-tabs__header {
-  background: #f4f4f4;
-  border-radius: 5px;
-}
 </style>
