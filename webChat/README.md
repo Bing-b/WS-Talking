@@ -1,4 +1,4 @@
-## WsTalking聊天室——基于VUE+Node.js+WebSocket   版本 1.0.0
+## WsTalking聊天室——基于VUE+elementUI+Node.js+WebSocket   版本 1.1.2
 ### 快速体验
 
 ### install模块  
@@ -9,10 +9,12 @@ npm run dev
 
 ### 运行服务端server/index.js  
 node index.js
-### 运行WebSocket 服务server/websocket.js  
-基线websocket.js
+### 运行WebSocket 服务server/websocket.js 
+
+node websocket.js
 
 
-##开发进程
+#状态
 
-功能改中...
+功能优化中
+
